@@ -2,8 +2,10 @@ package org.consoletrader
 
 import org.consoletrader.market.Candle
 import org.consoletrader.tasks.binance.ClearAllOrdersTask
-import org.consoletrader.tasks.binance.ListAssetsTask
+import org.consoletrader.tasks.ListAssetsTask
 import org.consoletrader.tasks.binance.OpenOrdersTask
+import org.knowm.xchange.ExchangeFactory
+import org.knowm.xchange.bitfinex.v1.BitfinexExchange
 
 
 fun main(args: Array<String>) {
@@ -17,9 +19,15 @@ fun main(args: Array<String>) {
         return
     }
 
+    val exSpec = BitfinexExchange().defaultExchangeSpecification
+    exSpec.apiKey = apiKey
+    exSpec.secretKey = apiSecret
+    val exchange = ExchangeFactory.INSTANCE.createExchange(exSpec)
+
+
     when (task) {
         "listorders" -> OpenOrdersTask(apiKey, apiSecret).execute()
-        "listassets" -> ListAssetsTask(apiKey, apiSecret).execute()
+        "listassets" -> ListAssetsTask(exchange).execute()
         "clearorders" -> ClearAllOrdersTask(apiKey, apiSecret).execute()
         else -> {
             println("Unknown task!")
@@ -142,9 +150,8 @@ fun checkArgument(args: Array<String>, parameter: String, message: String): Stri
 
 fun printUsage() {
     println("USAGE:")
-    println("-market:[market] -key:[key] secret:[secret] -task:listassets")
-    println("-market:[market] -key:[key] secret:[secret] -task:listorders")
-
-    println("-market:[market] -key:[key] secret:[secret] -task:clearorders")
+    println("-market:[market] -key:[key] -secret:[secret] -task:listassets")
+    println("-market:[market] -key:[key] -secret:[secret] -task:listorders")
+    println("-market:[market] -key:[key] -secret:[secret] -task:clearorders")
 //    println("-market:[market] -key:[key] secret:[secret] -task:buy -asset:[asset] -onrsibelow:[rsi]")
 }
