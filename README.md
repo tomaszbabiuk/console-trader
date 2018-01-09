@@ -1,4 +1,4 @@
-# Console trader is just a console app that will help you automate your daily trading tasks
+# Console trader is console app that to automate your daily trading tasks
 
 The goal of this project is to automate common trading tasks by running  a bunch of trading scripts. The project is fully transparent and no sensitive api keys are stored. The code is open sourced and everyone is welcome to contribute. Every trading task is encapsulated in one command line (for future scripting).
 
@@ -10,7 +10,7 @@ For now, Console trader supports Binance only (as binance-java-api is a good sta
 2. Git
 3. IntelliJ IDEA (or other java environment supporting maven projects format. I'm assuming IntelliJ IDEA is used in the rest of this document)
 
-## Getting started
+## Getting started (for developers)
 1. Clone local java-binance-api
 ```
 git clone https://github.com/joaopsilva/binance-java-api.git
@@ -26,7 +26,7 @@ mvn install
 4. Add new run configuration of "Application" type. Set org.consoletrader.MainKt as main class.
 5. Compile and use
 
-## Examples
+## Examples (program arguments)
 
 ### Listing porfolio
 Command:
