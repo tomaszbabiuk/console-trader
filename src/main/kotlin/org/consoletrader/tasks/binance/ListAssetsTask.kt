@@ -7,7 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import org.consoletrader.market.PortfolioAsset
 
-open class MyPortfolio(apiKey: String, apiSecret: String) : BaseBinanceOrder(apiKey, apiSecret) {
+open class ListAssetsTask(apiKey: String, apiSecret: String) : BaseBinanceTask(apiKey, apiSecret) {
 
     override fun execute(client: BinanceApiRestClient) {
         buildPortfolioObservable(client)

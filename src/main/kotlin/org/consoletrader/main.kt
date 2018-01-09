@@ -1,8 +1,9 @@
 package org.consoletrader
 
 import org.consoletrader.market.Candle
-import org.consoletrader.tasks.binance.MyPortfolio
-import org.consoletrader.tasks.binance.OpenOrders
+import org.consoletrader.tasks.binance.ClearAllOrdersTask
+import org.consoletrader.tasks.binance.ListAssetsTask
+import org.consoletrader.tasks.binance.OpenOrdersTask
 
 
 fun main(args: Array<String>) {
@@ -17,9 +18,9 @@ fun main(args: Array<String>) {
     }
 
     when (task) {
-        "orders" -> OpenOrders(apiKey, apiSecret).execute()
-        "portfolio" -> MyPortfolio(apiKey, apiSecret).execute()
-        "clearorders" -> executeClearOrders()
+        "listorders" -> OpenOrdersTask(apiKey, apiSecret).execute()
+        "listassets" -> ListAssetsTask(apiKey, apiSecret).execute()
+        "clearorders" -> ClearAllOrdersTask(apiKey, apiSecret).execute()
         else -> {
             println("Unknown task!")
         }
@@ -52,11 +53,6 @@ fun main(args: Array<String>) {
 //            .map { x ->
 //                Candle(x.closeTime, x.open.toDouble(), x.close.toDouble(), x.high.toDouble(), x.low.toDouble())
 //            }
-}
-
-fun executeClearOrders() {
-
-
 }
 
 //fun getRSIForSymbol(client: BinanceApiRestClient, price: TickerPrice) {
@@ -146,7 +142,9 @@ fun checkArgument(args: Array<String>, parameter: String, message: String): Stri
 
 fun printUsage() {
     println("USAGE:")
-    println("-market:[market] -key:[key] secret:[secret] -task:portfolio")
-    println("-market:[market] -key:[key] secret:[secret] -task:orders")
+    println("-market:[market] -key:[key] secret:[secret] -task:listassets")
+    println("-market:[market] -key:[key] secret:[secret] -task:listorders")
+
+    println("-market:[market] -key:[key] secret:[secret] -task:clearorders")
 //    println("-market:[market] -key:[key] secret:[secret] -task:buy -asset:[asset] -onrsibelow:[rsi]")
 }

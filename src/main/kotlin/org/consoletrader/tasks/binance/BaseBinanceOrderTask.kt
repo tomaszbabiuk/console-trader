@@ -8,7 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import org.consoletrader.market.Order
 
-class OpenOrders(apiKey: String, apiSecret: String) : MyPortfolio(apiKey, apiSecret) {
+abstract class BaseBinanceOrderTask(apiKey: String, apiSecret: String) : ListAssetsTask(apiKey, apiSecret) {
 
     override fun execute(client: BinanceApiRestClient) {
         val balanceObservable = buildPositiveBalanceObservable(client)
@@ -20,9 +20,15 @@ class OpenOrders(apiKey: String, apiSecret: String) : MyPortfolio(apiKey, apiSec
                 .distinct()
                 .flatMapIterable { client.getOpenOrders(OrderRequest(it)) }
                 .doOnComplete { println("DONE") }
-                .map { Order(it.symbol, it.origQty.toDouble(), it.price.toDouble(), it.status.toString(), it.type.toString(), it.side.toString()) }
-                .subscribe { println(it) }
+                .map {
+                    Order(it.orderId, it.symbol, it.origQty.toDouble(), it.price.toDouble(), it.status.toString(), it.type.toString(), it.side.toString())
+                }
+                .subscribe {
+                    processOrder(client, it)
+                }
     }
+
+    protected abstract fun processOrder(client: BinanceApiRestClient, order:Order)
 
     private fun extractTradingPairsRelatedToAccount(pair: Pair<List<AssetBalance>, List<TickerPrice>>): ArrayList<String> {
         val result = ArrayList<String>()

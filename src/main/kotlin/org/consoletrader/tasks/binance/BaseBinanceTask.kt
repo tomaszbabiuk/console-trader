@@ -5,7 +5,7 @@ import com.binance.api.client.BinanceApiRestClient
 import org.consoletrader.tasks.Task
 import java.util.*
 
-abstract class BaseBinanceOrder(val apiKey: String, val apiSecret: String) : Task {
+abstract class BaseBinanceTask(val apiKey: String, val apiSecret: String) : Task {
     override fun execute() {
         val factory = BinanceApiClientFactory.newInstance(apiKey, apiSecret)
         val client = factory.newRestClient()

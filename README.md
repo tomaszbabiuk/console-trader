@@ -28,10 +28,10 @@ mvn install
 
 ## Examples (program arguments)
 
-### Listing porfolio
+### Listing assets (portfolio)
 Command:
 ```
--market:binance -key:YOUR_BINANCE_KEY -secret:YOUR_BINANCE_SECRET -task:portfolio
+-market:binance -key:YOUR_BINANCE_KEY -secret:YOUR_BINANCE_SECRET -task:listassets
 ```
 
 Sample output:
@@ -46,13 +46,26 @@ DONE
 ### Listing orders
 Command:
 ```
--market:binance -key:YOUR_BINANCE_KEY -secret:YOUR_BINANCE_SECRET -task:orders
+-market:binance -key:YOUR_BINANCE_KEY -secret:YOUR_BINANCE_SECRET -task:listorders
 ```
 
 Sample output:
 ```
 Connected to Binance, server time is Tue Jan 09 15:21:00 CET 2018
 SELL XVGETH: 20.0 * 1.0, NEW, LIMIT
+DONE
+
+```
+
+### Clearing orders
+Command:
+```
+-market:binance -key:YOUR_BINANCE_KEY -secret:YOUR_BINANCE_SECRET -task:clearorders
+```
+
+Sample output:
+```
+Connected to Binance, server time is Tue Jan 09 15:21:00 CET 2018
 DONE
 
 ```
