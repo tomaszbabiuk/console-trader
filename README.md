@@ -55,7 +55,4 @@ Connected to Binance, server time is Tue Jan 09 15:21:00 CET 2018
 SELL XVGETH: 20.0 * 1.0, NEW, LIMIT
 DONE
 
-Process finished with exit code 0
-
-
 ```
