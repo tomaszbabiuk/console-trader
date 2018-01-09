@@ -6,6 +6,7 @@ import com.binance.api.client.domain.account.request.OrderRequest
 import com.binance.api.client.domain.market.TickerPrice
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
+import org.consoletrader.market.Order
 
 class OpenOrders(apiKey: String, apiSecret: String) : MyPortfolio(apiKey, apiSecret) {
 
@@ -19,7 +20,8 @@ class OpenOrders(apiKey: String, apiSecret: String) : MyPortfolio(apiKey, apiSec
                 .distinct()
                 .flatMapIterable { client.getOpenOrders(OrderRequest(it)) }
                 .doOnComplete { println("DONE") }
-                .subscribe{ println("${it.symbol}, ${it.origQty} * ${it.price}, ${it.status}, ${it.type}, ${it.side}") }
+                .map { Order(it.symbol, it.origQty.toDouble(), it.price.toDouble(), it.status.toString(), it.type.toString(), it.side.toString()) }
+                .subscribe { println(it) }
     }
 
     private fun extractTradingPairsRelatedToAccount(pair: Pair<List<AssetBalance>, List<TickerPrice>>): ArrayList<String> {

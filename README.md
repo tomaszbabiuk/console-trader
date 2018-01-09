@@ -26,3 +26,36 @@ mvn install
 4. Add new run configuration of "Application" type. Set org.consoletrader.MainKt as main class.
 5. Compile and use
 
+## Examples
+
+### Listing porfolio
+Command:
+```
+-market:binance -key:YOUR_BINANCE_KEY -secret:YOUR_BINANCE_SECRET -task:portfolio
+```
+
+Sample output:
+```
+Connected to Binance, server time is Tue Jan 09 14:47:45 CET 2018
+LTC: 0,00031897 = 0,08$
+ETH: 0,00078940 = 0,91$
+XLM: 0,93800000 = 0,55$
+DONE
+```
+
+### Listing orders
+Command:
+```
+-market:binance -key:YOUR_BINANCE_KEY -secret:YOUR_BINANCE_SECRET -task:orders
+```
+
+Sample output:
+```
+Connected to Binance, server time is Tue Jan 09 15:21:00 CET 2018
+SELL XVGETH: 20.0 * 1.0, NEW, LIMIT
+DONE
+
+Process finished with exit code 0
+
+
+```
