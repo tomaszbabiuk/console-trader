@@ -1,4 +1,4 @@
-# Console trader is console app that to automate your daily trading tasks
+# Console trader is console app to automate your daily trading tasks
 
 The goal of this project is to automate common trading tasks by running  a bunch of trading scripts. The project is fully transparent and no sensitive api keys are stored. The code is open sourced and everyone is welcome to contribute. Every trading task is encapsulated in one command line (for future scripting).
 
