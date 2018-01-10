@@ -1,4 +1,4 @@
-package org.consoletrader.market
+package org.consoletrader.domain
 
 data class Order(val id: Long, val symbol: String, val amount: Double, val price: Double, val status: String, val type: String, val side: String) {
     override fun toString(): String {

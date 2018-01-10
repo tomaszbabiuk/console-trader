@@ -1,71 +1,63 @@
 package org.consoletrader.tasks
 
+import org.consoletrader.domain.PortfolioAsset
 import org.knowm.xchange.Exchange
+import org.knowm.xchange.currency.CurrencyPair
+import org.knowm.xchange.service.marketdata.MarketDataService
+import java.math.BigDecimal
 
-open class ListAssetsTask(private val exchange: Exchange) : Task {
+open class ListAssetsTask(exchange: Exchange) : Task {
+    private val marketDataService: MarketDataService = exchange.marketDataService
+    private val accountService = exchange.accountService
+    private var etherPrice: Double? = null
+
     override fun execute() {
-        val accountService = exchange.accountService
         val accountInfo = accountService.accountInfo
         for (x in accountInfo.wallet.balances) {
-            println(x)
+            if (x.value.total > BigDecimal.ZERO) {
+                val usd = calculateAssetPrice(x.value.currency.toString(), x.value.total.toDouble())
+                val asset = PortfolioAsset(x.value.currency.symbol, x.value.total.toDouble(), usd)
+                println(asset)
+            }
         }
     }
 
-//    override fun execute(client: BinanceApiRestClient) {
-//        buildPortfolioObservable(client)
-//                .doOnComplete { println("DONE") }
-//                .subscribe { println(it) }
-//    }
-//
-//    protected fun buildPositiveBalanceObservable(client: BinanceApiRestClient): Observable<List<AssetBalance>> {
-//        return Observable
-//                .just(client.account.balances)
-//                .flatMapIterable { it }
-//                .filter { it.free.toDouble() > 0 }
-//                .toList()
-//                .toObservable()
-//    }
-//
-//    private fun buildPortfolioObservable(client: BinanceApiRestClient): Observable<PortfolioAsset> {
-//        val balancesObservable = buildPositiveBalanceObservable(client)
-//        val pricesObservable = Observable.just(client.allPrices)
-//
-//        return balancesObservable
-//                .zipWith(pricesObservable, BiFunction { balance: List<AssetBalance>, price: List<TickerPrice> -> Pair(balance, price) })
-//                .flatMapIterable(this::extractTradingPairsRelatedToAccount)
-//    }
-//
-//    private fun extractTradingPairsRelatedToAccount(pair: Pair<List<AssetBalance>, List<TickerPrice>>): List<PortfolioAsset> {
-//        val balances = pair.first
-//        val prices = pair.second
-//        val result = ArrayList<PortfolioAsset>()
-//
-//        for (currency in balances) {
-//            val assetPrice = calculateAssetPrice(currency, prices)
-//            val portfolio = PortfolioAsset(currency.asset, currency.free.toDouble() + currency.locked.toDouble(), assetPrice)
-//            result.add(portfolio)
-//        }
-//
-//        return result
-//    }
-//
-//    protected fun calculateAssetPrice(assetBalance: AssetBalance, prices: List<TickerPrice>): Double {
-//        val usdtMarket = "${assetBalance.asset}USDT"
-//        val canBePricedInDollars = prices.map { it.symbol }.contains(usdtMarket)
-//        if (canBePricedInDollars) {
-//            val usdtPrice = prices.first { it.symbol == usdtMarket }.price.toDouble()
-//            return assetBalance.free.toDouble() * usdtPrice
-//        }
-//
-//        val etherMarket = "${assetBalance.asset}ETH"
-//        val canBePricedInEther = prices.map { it.symbol }.contains(etherMarket)
-//        if (canBePricedInEther) {
-//            val etherPrice = prices.first { it.symbol == "ETHUSDT" }.price.toDouble()
-//            val assetPrice = prices.first { it.symbol == etherMarket }.price.toDouble()
-//            return assetBalance.free.toDouble() * assetPrice * etherPrice
-//        }
-//
-//        //TODO:use binance coin as well
-//        return 0.0
-//    }
+    private fun calculateAssetPrice(symbol: String, amount: Double): Double {
+        val usdCurrencyPair = CurrencyPair(symbol, "USD")
+        val usdValue = tryGetTickerData(usdCurrencyPair, amount)
+        if (usdValue != null) {
+            return usdValue
+        }
+
+        val usdtCurrencyPair = CurrencyPair(symbol, "USDT")
+        val usdtResult = tryGetTickerData(usdtCurrencyPair, amount)
+        if (usdtResult != null) {
+            return usdtResult
+        }
+
+        val ethCurrencyPair = CurrencyPair(symbol, "ETH")
+        val ethResult = tryGetTickerData(ethCurrencyPair, amount)
+        if (ethResult != null) {
+            if (etherPrice == null) {
+                etherPrice = calculateAssetPrice("ETH", 1.0)
+            }
+
+            if (etherPrice != null) {
+                return ethResult * etherPrice!!
+            }
+        }
+
+        return 0.0
+    }
+
+
+    private fun tryGetTickerData(pair: CurrencyPair, amount: Double): Double? {
+        try {
+            val ticker = marketDataService.getTicker(pair)
+            return ticker.last.toDouble() * amount
+        } catch (ex: Exception) {
+        }
+
+        return null
+    }
 }

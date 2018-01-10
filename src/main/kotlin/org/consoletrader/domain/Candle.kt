@@ -1,4 +1,4 @@
-package org.consoletrader.market
+package org.consoletrader.domain
 
 import java.util.*
 
