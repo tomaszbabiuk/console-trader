@@ -1,4 +1,4 @@
-package org.consoletrader.tasks
+package org.consoletrader.common
 
 interface Task {
     fun execute()

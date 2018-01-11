@@ -1,6 +1,6 @@
-package org.consoletrader.tasks
+package org.consoletrader.wallet
 
-import org.consoletrader.domain.PortfolioAsset
+import org.consoletrader.common.Task
 import org.knowm.xchange.Exchange
 import org.knowm.xchange.currency.CurrencyPair
 import org.knowm.xchange.service.marketdata.MarketDataService

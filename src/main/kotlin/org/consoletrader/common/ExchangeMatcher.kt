@@ -1,4 +1,4 @@
-package org.consoletrader
+package org.consoletrader.common
 
 import org.knowm.xchange.Exchange
 import org.knowm.xchange.ExchangeFactory
