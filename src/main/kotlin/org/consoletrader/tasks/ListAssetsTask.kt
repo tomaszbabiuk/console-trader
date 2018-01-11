@@ -13,13 +13,16 @@ open class ListAssetsTask(exchange: Exchange) : Task {
 
     override fun execute() {
         val accountInfo = accountService.accountInfo
+        var usdSum = 0.0
         for (x in accountInfo.wallet.balances) {
             if (x.value.total > BigDecimal.ZERO) {
                 val usd = calculateAssetPrice(x.value.currency.toString(), x.value.total.toDouble())
                 val asset = PortfolioAsset(x.value.currency.symbol, x.value.total.toDouble(), usd)
                 println(asset)
+                usdSum += usd
             }
         }
+        println("USD sum is $usdSum")
     }
 
     private fun calculateAssetPrice(symbol: String, amount: Double): Double {
