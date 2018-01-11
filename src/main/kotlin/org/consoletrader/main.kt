@@ -1,6 +1,7 @@
 package org.consoletrader
 
-import org.consoletrader.tasks.ListAssetsTask
+import org.consoletrader.common.ExchangeMatcher
+import org.consoletrader.wallet.ListAssetsTask
 
 fun main(args: Array<String>) {
     val exchangeName = checkArgument(args, "exchange", "Exchange not defined. Allowed markets: binance, bitfinex")

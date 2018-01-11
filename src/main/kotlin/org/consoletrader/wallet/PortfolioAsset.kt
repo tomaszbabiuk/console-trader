@@ -1,4 +1,4 @@
-package org.consoletrader.domain
+package org.consoletrader.wallet
 
 data class PortfolioAsset(val assetSymbol: String, val amount: Double, val priceInDollars: Double) {
     override fun toString(): String {
