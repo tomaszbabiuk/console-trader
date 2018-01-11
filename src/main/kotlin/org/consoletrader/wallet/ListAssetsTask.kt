@@ -1,14 +1,14 @@
 package org.consoletrader.wallet
 
+import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
-import org.knowm.xchange.Exchange
 import org.knowm.xchange.currency.CurrencyPair
 import org.knowm.xchange.service.marketdata.MarketDataService
 import java.math.BigDecimal
 
-open class ListAssetsTask(exchange: Exchange) : Task {
-    private val marketDataService: MarketDataService = exchange.marketDataService
-    private val accountService = exchange.accountService
+open class ListAssetsTask(exchangeManager: ExchangeManager) : Task {
+    private val marketDataService: MarketDataService = exchangeManager.exchange.marketDataService
+    private val accountService = exchangeManager.exchange.accountService
     private var etherPrice: Double? = null
 
     override fun execute() {
