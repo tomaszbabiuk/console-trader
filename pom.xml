@@ -83,6 +83,12 @@
 
         <dependency>
             <groupId>org.knowm.xchange</groupId>
+            <artifactId>xchange-bitmarket</artifactId>
+            <version>${knowm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.knowm.xchange</groupId>
             <artifactId>xchange-binance</artifactId>
             <version>${knowm.version}</version>
         </dependency>
