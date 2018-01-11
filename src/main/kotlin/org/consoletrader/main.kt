@@ -2,7 +2,6 @@ package org.consoletrader
 
 import org.consoletrader.tasks.ListAssetsTask
 
-
 fun main(args: Array<String>) {
     val exchangeName = checkArgument(args, "exchange", "Exchange not defined. Allowed markets: binance, bitfinex")
     val apiKey = checkArgument(args, "key", "API key not defined")
