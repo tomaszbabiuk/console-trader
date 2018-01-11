@@ -41,7 +41,13 @@
 
         <dependency>
             <groupId>org.knowm.xchange</groupId>
-            <artifactId>xchange-examples</artifactId>
+            <artifactId>xchange-bitfinex</artifactId>
+            <version>${knowm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.knowm.xchange</groupId>
+            <artifactId>xchange-binance</artifactId>
             <version>${knowm.version}</version>
         </dependency>
 

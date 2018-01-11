@@ -55,7 +55,7 @@ open class ListAssetsTask(exchange: Exchange) : Task {
         try {
             val ticker = marketDataService.getTicker(pair)
             return ticker.last.toDouble() * amount
-        } catch (ex: Exception) {
+        } catch (ignored: Exception) {
         }
 
         return null
