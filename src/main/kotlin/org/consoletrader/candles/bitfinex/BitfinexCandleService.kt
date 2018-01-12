@@ -2,12 +2,16 @@ package org.consoletrader.candles.bitfinex
 
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
-import org.consoletrader.candles.Candle
 import org.consoletrader.candles.CandlesService
 import org.knowm.xchange.currency.CurrencyPair
+import org.ta4j.core.BaseTick
+import org.ta4j.core.Tick
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class BitfinexCandleService : CandlesService {
@@ -28,10 +32,10 @@ class BitfinexCandleService : CandlesService {
         api = builder.create(BitfinexPublicAPI::class.java)
     }
 
-    override fun getCandles(pair: CurrencyPair): Observable<Candle> {
+    override fun getCandles(pair: CurrencyPair): Observable<Tick> {
         return api
                 .queryCandles("${pair.base}${pair.counter}")
-                .flatMapIterable { it }
+                .flatMapIterable { it.reversed() }
                 .map {
                     val timestamp = it[0].toLong()
                     val open = it[1]
@@ -39,9 +43,15 @@ class BitfinexCandleService : CandlesService {
                     val high = it[3]
                     val low = it[4]
                     val volume = it[5]
-                    Candle(timestamp, open, close, high, low, volume)
+
+                    val oldJavaDate = Date(timestamp)
+                    val instant = oldJavaDate.toInstant()
+                    val newJavaDateUtc = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
+                    BaseTick(newJavaDateUtc, open, high, low, close, volume)
                 }
+
     }
 
 }
+
 
