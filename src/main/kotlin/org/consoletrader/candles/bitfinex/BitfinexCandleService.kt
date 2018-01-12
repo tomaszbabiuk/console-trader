@@ -1,21 +1,14 @@
 package org.consoletrader.candles.bitfinex
 
-import io.reactivex.Observable
-import org.consoletrader.candles.Candle
 import io.reactivex.Single
-import okhttp3.OkHttpClient
 import org.consoletrader.candles.CandlesService
 import org.consoletrader.candles.base.BaseApi
 import org.knowm.xchange.currency.CurrencyPair
 import org.ta4j.core.BaseTick
 import org.ta4j.core.Tick
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class BitfinexCandleService : BaseApi<BitfinexPublicAPI>(
         anApi = BitfinexPublicAPI::class.java,
