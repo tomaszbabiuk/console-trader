@@ -7,6 +7,7 @@ import org.knowm.xchange.currency.CurrencyPair
 import org.ta4j.core.BaseTimeSeries
 import org.ta4j.core.indicators.RSIIndicator
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -20,19 +21,17 @@ class RsiBelowAlertTask(exchangeManager: ExchangeManager, private val pair: Curr
     }
 
     private fun doRsiLoop() {
-        val series = BaseTimeSeries("rsi_ticks")
-
         candleService
                 .getCandles(pair)
-                .doOnComplete {
+                .map {
+                    val series = BaseTimeSeries("rsi_ticks", it)
                     val closePrice = ClosePriceIndicator(series)
-                    series.tickCount
                     val rsiIndicator = RSIIndicator(closePrice, 14)
-                    val rsiValue = rsiIndicator.getValue(series.tickCount - 1).toDouble()
-                    println(rsiValue)
+                    rsiIndicator.getValue(series.tickCount - 1).toDouble()
                 }
-                .subscribe{
-                    series.addTick(it)
+                .doOnSuccess {
+                    println("${Date()}, RSI: $it")
                 }
+                .subscribe()
     }
 }
