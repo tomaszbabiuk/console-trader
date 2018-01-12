@@ -6,7 +6,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-abstract class BaseApi<T>(anApi: Class<T>, endpoint: String) {
+abstract class BaseApi<out T>(anApi: Class<T>, endpoint: String) {
 
     private val api: T
 

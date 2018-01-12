@@ -22,14 +22,14 @@ object CandleServiceObservable {
                 .filter { candles -> candles.size == candlesCount }
     }
 
-    private fun produceCandles(candle: Candle, count: Int): Observable<List<Candle>> {
+    private fun produceCandles(newCandle: Candle, candlesCount: Int): Observable<List<Candle>> {
         var collection = candlesReference.get()
 
-        if (collection.count() < count) {
-            collection.plus(candle)
+        if (collection.count() < candlesCount) {
+            collection = collection.plus(newCandle)
         } else {
             collection.minus(0)
-            collection.plus(candle)
+            collection = collection.plus(newCandle)
         }
 
         candlesReference.set(collection)

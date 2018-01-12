@@ -1,35 +1,18 @@
 package org.consoletrader.candles.binance
 
 import io.reactivex.Observable
-import okhttp3.OkHttpClient
 import org.consoletrader.candles.Candle
 import org.consoletrader.candles.CandlesService
+import org.consoletrader.candles.base.BaseApi
 import org.knowm.xchange.currency.CurrencyPair
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
-class BinanceCandleService : CandlesService {
-    private var api: BinancePublicAPI
-
-    init {
-        val client = OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .build()
-
-        val builder = Retrofit.Builder()
-                .baseUrl("https://api.binance.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(client)
-                .build()
-        api = builder.create(BinancePublicAPI::class.java)
-    }
+class BinanceCandleService : BaseApi<BinancePublicAPI>(
+        anApi = BinancePublicAPI::class.java,
+        endpoint = "https://api.binance.com"),
+        CandlesService {
 
     override fun getCandles(pair: CurrencyPair): Observable<Candle> {
-        return api
+        return getApi()
                 .queryCandles("${pair.base}${pair.counter}")
                 .flatMapIterable { it }
                 .map {

@@ -7,13 +7,15 @@ import org.consoletrader.candles.base.BaseApi
 import org.knowm.xchange.currency.CurrencyPair
 import java.time.Instant
 
-class BitmarketCandleService : BaseApi<BitmarketPublicApi>(anApi = BitmarketPublicApi::class.java, endpoint = "https://www.bitmarket.pl/"),
+class BitmarketCandleService : BaseApi<BitmarketPublicApi>(
+        anApi = BitmarketPublicApi::class.java,
+        endpoint = "https://www.bitmarket.pl/"),
         CandlesService {
 
     override fun getCandles(pair: CurrencyPair): Observable<Candle> {
 
         //todo: pair is correct???
-        return getApi().query(pair = pair.toString())
+        return getApi().queryCandles(pair = pair.toString())
                 .map {
                     val timestamp = Instant.EPOCH.epochSecond
                     //todo: review if this data is correct!!!
