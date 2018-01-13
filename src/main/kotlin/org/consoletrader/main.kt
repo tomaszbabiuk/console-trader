@@ -1,14 +1,12 @@
 package org.consoletrader
 
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.functions.Action
 import org.consoletrader.common.ExchangeMatcher
 import org.consoletrader.rsi.RsiCalculator
 import org.consoletrader.rsi.RsiResultPresenter
 import org.consoletrader.wallet.ListAssetsCalculator
 import org.consoletrader.wallet.ListAssetsResultPresenter
 import org.knowm.xchange.currency.CurrencyPair
-import java.util.concurrent.Executor
-
 
 
 fun main(args: Array<String>) {
@@ -40,22 +38,17 @@ fun main(args: Array<String>) {
             val rsi = checkArgument(args, "rsi", "RSI value to trigger")
             if (pair != null && rsi != null) {
                 val calculator = RsiCalculator(exchangeManager, CurrencyPair(pair))
-                val presenter = RsiResultPresenter { it < 30.0 }
+                val successAction = Action {
+                    //TODO:execute action by defined in parameters
+                    println("success!")
+                }
+                val presenter = RsiResultPresenter({ it < 30.0 }, successAction)
                 presenter.present(calculator)
             }
         }
         else -> {
             println("Unknown task!")
         }
-    }
-
-
-
-}
-
-class CurrentThreadExecutor : Executor {
-    override fun execute(r: Runnable) {
-        r.run()
     }
 }
 

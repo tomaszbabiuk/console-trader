@@ -12,7 +12,7 @@ import org.ta4j.core.indicators.helpers.ClosePriceIndicator
 class RsiCalculator(exchangeManager: ExchangeManager, private val pair: CurrencyPair) : Calculator<Double> {
     private val candleService = exchangeManager.candlesService
 
-    override fun calculate() : Observable<Double> {
+    override fun calculate(): Observable<Double> {
         return candleService
                 .getCandles(pair)
                 .map {
