@@ -1,28 +1,26 @@
 package org.consoletrader.wallet
 
+import io.reactivex.Observable
 import org.consoletrader.common.ExchangeManager
-import org.consoletrader.common.Task
+import org.consoletrader.common.Calculator
 import org.knowm.xchange.currency.CurrencyPair
 import org.knowm.xchange.service.marketdata.MarketDataService
 import java.math.BigDecimal
 
-open class ListAssetsTask(exchangeManager: ExchangeManager) : Task {
+open class ListAssetsCalculator(exchangeManager: ExchangeManager) : Calculator<PortfolioAsset> {
     private val marketDataService: MarketDataService = exchangeManager.exchange.marketDataService
     private val accountService = exchangeManager.exchange.accountService
     private var etherPrice: Double? = null
 
-    override fun execute() {
-        val accountInfo = accountService.accountInfo
-        var usdSum = 0.0
-        for (x in accountInfo.wallet.balances) {
-            if (x.value.total > BigDecimal.ZERO) {
-                val usd = calculateAssetPrice(x.value.currency.toString(), x.value.total.toDouble())
-                val asset = PortfolioAsset(x.value.currency.symbol, x.value.total.toDouble(), usd)
-                println(asset)
-                usdSum += usd
-            }
-        }
-        println("USD sum is $usdSum")
+    override fun calculate() : Observable<PortfolioAsset> {
+        return Observable
+                .just(accountService.accountInfo)
+                .flatMapIterable { it.wallet.balances.values }
+                .filter { it.total > BigDecimal.ZERO}
+                .map {
+                    val usd = calculateAssetPrice(it.currency.toString(), it.total.toDouble())
+                    PortfolioAsset(it.currency.symbol, it.total.toDouble(), usd)
+                }
     }
 
     private fun calculateAssetPrice(symbol: String, amount: Double): Double {
