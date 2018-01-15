@@ -94,6 +94,7 @@ TASK COMPLETED
     -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -action:pushoveralert([PUSHOVER_API_KEY]|[PUSHOVER_USER_ID]|[MESSAGE])
 ```
 
+Look on [Push-messaging-configuration](https://github.com/tomaszbabiuk/console-trader/wiki/Push-messaging-configuration) wiki page for tutorial how to obtain pushover api keys
 ##### Example:
 ```
     -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -action:pushoveralert(XxxxxXxxxxX|XxxxxXxxxxX|rsi_above_30)
