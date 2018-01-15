@@ -1,4 +1,4 @@
-package org.consoletrader.candles.bitfinex
+package org.consoletrader.candles.bitmarket
 
 import io.reactivex.Single
 import org.consoletrader.candles.CandlesService
@@ -10,31 +10,31 @@ import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.util.*
 
-class BitfinexCandleService : BaseApi<BitfinexPublicAPI>(
-        anApi = BitfinexPublicAPI::class.java,
-        endpoint = "https://api.bitfinex.com"),
+class BitmarketCandleService : BaseApi<BitmarketPublicApi>(
+        anApi = BitmarketPublicApi::class.java,
+        endpoint = "https://www.bitmarket.pl/"),
         CandlesService {
 
     override fun getCandles(pair: CurrencyPair): Single<MutableList<Tick>> {
-        return getApi()
-                .queryCandles("${pair.base}${pair.counter}")
+
+        return getApi().queryCandles(pair = "${pair.base}${pair.counter}")
+                .toObservable()
+                .map { it.reversed() }
                 .flatMapIterable { it.reversed() }
                 .map {
-                    val timestamp = it[0].toLong()
-                    val open = it[1]
-                    val close = it[2]
-                    val high = it[3]
-                    val low = it[4]
-                    val volume = it[5]
+                    val open = it.open
+                    val high = it.high
+                    val low = it.low
+                    val close = it.close
+                    val volume = it.vol
+                    val timestamp = it.time
 
                     val oldJavaDate = Date(timestamp)
                     val instant = oldJavaDate.toInstant()
                     val newJavaDateUtc = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC)
                     BaseTick(newJavaDateUtc, open, high, low, close, volume) as Tick
-                }
-                .toList()
+                }.toList()
 
     }
+
 }
-
-
