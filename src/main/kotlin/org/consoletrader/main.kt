@@ -3,6 +3,7 @@ package org.consoletrader
 import io.reactivex.functions.Action
 import org.consoletrader.common.ExchangeMatcher
 import org.consoletrader.common.Task
+import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.rsi.WatchRsiAboveTask
@@ -36,6 +37,7 @@ fun main(args: Array<String>) {
         val actions = ArrayList<Task>()
         actions += MarketBuyTask(exchangeManager)
         actions += MarketSellTask(exchangeManager)
+        actions += PushoverNotificationTask(exchangeManager)
         val matchedAction = actions.firstOrNull { it.match(actionRaw) }
         if (matchedAction != null) {
             actionToExecute = Action {
@@ -50,6 +52,7 @@ fun main(args: Array<String>) {
     tasks += MarketSellTask(exchangeManager)
     tasks += WatchRsiAboveTask(exchangeManager, actionToExecute)
     tasks += WatchRsiBelowTask(exchangeManager, actionToExecute)
+    tasks += PushoverNotificationTask(exchangeManager)
 
     tasks
         .filter { it.match(taskRaw) }
@@ -98,6 +101,7 @@ fun printUsage() {
         Actions:
         -action:marketbuy([pair]|[value]) - places market buy order on specific pair
         -action:marketsell([pair]|[value]) - places market sell order on specific pair
+        -action:pushoveralert([apiKey]|[userId]|[message]) - sends push notification using pushover service
 
         Examples of tasks/actions (syntax is the same):
         watchrsiabove(XRP/USD|70) - observes RSI of XRP/USD pair and completes when RSI > 70)
@@ -109,5 +113,4 @@ fun printUsage() {
 
     //TODO:
     //-task:gmailalert(gmailusername|gmailpassword|message)
-    //-task:pushoveralert(username|apikey|message)
 }

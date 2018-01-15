@@ -42,6 +42,7 @@ DONE
 ```
 
 ##### Example:
+
 ```
    -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:marketbuy(XRP/USD|10XRP)
 ```
@@ -93,3 +94,23 @@ TASK COMPLETED
    -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -watchrsibelow(XRP/USD|30) -task:marketbuy(XRP/USD|30XRP)
 ```
 Watches RSI of XRP/USD pair and place market order to buy 30XRP when rsi is below 30
+
+### Sending notifications via pushover service
+```
+    -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -action:pushoveralert([PUSHOVER_API_KEY]|[PUSHOVER_USER_ID]|[MESSAGE])
+```
+
+##### Example:
+```
+    -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -action:pushoveralert(XxxxxXxxxxX|XxxxxXxxxxX|rsi_above_30)
+```
+
+If you want to use spaces in message you can wrap whole -action in quotation marks:
+```
+    -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX "-action:pushoveralert(XxxxxXxxxxX|XxxxxXxxxxX|rsi above 30)"
+```
+
+Sending only push message is useless, so you can combine this with any other task, for example you can send push when RSI for XRP is above 30
+```
+    -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsiabove(XRP/USD|37) "-action:pushoveralert(XxxxxXxxxxX|XxxxxXxxxxX|rsi above 30)"
+```
