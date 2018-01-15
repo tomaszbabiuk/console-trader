@@ -88,3 +88,8 @@ TASK COMPLETED
    -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -task:watchrsibelow(pair|rsi) -action:[action]
    -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -task:watchrsiabove(pair|rsi) -action:[action]
 ```
+##### Example:
+```
+   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -watchrsibelow(XRP/USD|30) -task:marketbuy(XRP/USD|30XRP)
+```
+Watches RSI of XRP/USD pair and place market order to buy 30XRP when rsi is below 30
