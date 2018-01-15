@@ -4,7 +4,7 @@ The goal of this project is to automate common trading tasks by running  a bunch
 
 ## Exchange support
 For now, Console trader supports Binance and Bitfinex. Supporting more exchanges is possible as project uses XChange wrapper to more than 60 cryptocurrency exchanges.
-If you want to add another exchange, create PR and start from expanding ExchangeMatcher class.
+If you want to add another exchange, see [how to contribute](https://github.com/tomaszbabiuk/console-trader/wiki/How-to-contribute%3F)
 
 ## Use at your own risk
 Console-trader is a work in progress. Use this software at your own risk. Always do your diligence before investing!
