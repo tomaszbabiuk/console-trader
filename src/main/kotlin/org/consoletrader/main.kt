@@ -108,6 +108,6 @@ fun printUsage() {
 
 
     //TODO:
-    //-task:gmailalert(gmailusername|gmailpassword)
-    //-task:pushoveralert(username|apikey)
+    //-task:gmailalert(gmailusername|gmailpassword|message)
+    //-task:pushoveralert(username|apikey|message)
 }
