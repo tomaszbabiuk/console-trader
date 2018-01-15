@@ -53,10 +53,11 @@ Places market order to buy 10XRP
 ```
 Places market order to buy ripple for about 100USD (the amount of XRP is calculated from market price in the moment)
 
+
 ### Watching RSI
 ```
-   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsibelow(pair|rsi)
-   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsiabove(pair|rsi)
+   -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -task:watchrsibelow(pair|rsi)
+   -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -task:watchrsiabove(pair|rsi)
 ```
 ##### Example 1:
 ```
@@ -82,6 +83,12 @@ Watches RSI of XRP/USD pair and completes when RSI is above 70. Example output:
 TASK COMPLETED
 ```
 
+
+### Watching RSI and executing action when completed
+```
+   -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -task:watchrsibelow(pair|rsi) -action:[action]
+   -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -task:watchrsiabove(pair|rsi) -action:[action]
+```
 ### Sending notifications via pushover service
 ```
     -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -action:pushoveralert([PUSHOVER_API_KEY]|[PUSHOVER_USER_ID]|[MESSAGE])
@@ -101,11 +108,3 @@ Sending only push message is useless, so you can combine this with any other tas
 ```
     -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsiabove(XRP/USD|37) "-action:pushoveralert(XxxxxXxxxxX|XxxxxXxxxxX|rsi above 30)"
 ```
-
-
-## Push messaging configuration ##
-If you want to have push messaging you need to configure account on https://pushover.net/. This website allow to sending pushes for 7 days free, after that you need to buy premium for 5 usd (single payment, no subscription) or create a new account
-1. Create account on https://pushover.net/
-2. Install pushover Android or iOS app and login into this app
-3. Create application project https://pushover.net/apps/build (you can put random values)
-4. Now you can use your ```userId``` and ```apiKey``` in Console Trader app
