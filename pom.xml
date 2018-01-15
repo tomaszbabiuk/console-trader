@@ -11,6 +11,8 @@
     <properties>
         <kotlin.version>1.2.10</kotlin.version>
         <knowm.version>4.3.2</knowm.version>
+        <rxjava.version>2.1.6</rxjava.version>
+        <retrofit.version>2.3.0</retrofit.version>
     </properties>
 
     <repositories>
@@ -48,25 +50,25 @@
         <dependency>
             <groupId>io.reactivex.rxjava2</groupId>
             <artifactId>rxjava</artifactId>
-            <version>2.1.6</version>
+            <version>${rxjava.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>retrofit</artifactId>
-            <version>2.3.0</version>
+            <version>${retrofit.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>converter-gson</artifactId>
-            <version>2.3.0</version>
+            <version>${retrofit.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>adapter-rxjava2</artifactId>
-            <version>2.3.0</version>
+            <version>${retrofit.version}</version>
         </dependency>
 
         <dependency>
@@ -97,6 +99,18 @@
             <groupId>org.ta4j</groupId>
             <artifactId>ta4j-core</artifactId>
             <version>0.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.25</version>
         </dependency>
 
         <dependency>
