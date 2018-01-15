@@ -2,17 +2,17 @@ package org.consoletrader.wallet
 
 import io.reactivex.Observable
 import org.consoletrader.common.ExchangeManager
-import org.consoletrader.common.Calculator
+import org.consoletrader.common.DataSource
 import org.knowm.xchange.currency.CurrencyPair
 import org.knowm.xchange.service.marketdata.MarketDataService
 import java.math.BigDecimal
 
-open class ListAssetsCalculator(exchangeManager: ExchangeManager) : Calculator<PortfolioAsset> {
+open class ListAssetsDataSource(exchangeManager: ExchangeManager) : DataSource<PortfolioAsset> {
     private val marketDataService: MarketDataService = exchangeManager.exchange.marketDataService
     private val accountService = exchangeManager.exchange.accountService
     private var etherPrice: Double? = null
 
-    override fun calculate() : Observable<PortfolioAsset> {
+    override fun createObservable() : Observable<PortfolioAsset> {
         return Observable
                 .just(accountService.accountInfo)
                 .flatMapIterable { it.wallet.balances.values }

@@ -23,10 +23,9 @@ Syntax:
 -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -task:wallet
 ```
 
-Examples:
+##### Example:
 ```
 -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:wallet
--exchange:binance -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:wallet
 ```
 
 Sample output:
@@ -35,6 +34,52 @@ LTC: 0,00031897 = 0,08$
 ETH: 0,00078940 = 0,91$
 XLM: 0,93800000 = 0,55$
 DONE
+```
+
+### Buying
+```
+-exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -task:marketbuy(pair|amount)
+```
+
+##### Example:
+
+```
+   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:marketbuy(XRP/USD|10XRP)
+```
+Places market order to buy 10XRP
+
+```
+   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:marketbuy(XRP/USD|100USD)
+```
+Places market order to buy ripple for about 100USD (the amount of XRP is calculated from market price in the moment)
+
+### Watching RSI
+```
+   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsibelow(pair|rsi)
+   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsiabove(pair|rsi)
+```
+##### Example 1:
+```
+   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsibelow(XRP/USD|30)
+```
+Watches RSI of XRP/USD pair and completes when RSI is below 30. Example output:
+```
+2018-01-15 10:07:11: RSI: 55.41
+2018-01-15 10:12:11: RSI: 45.30
+2018-01-15 10:17:11: RSI: 35.40
+TASK COMPLETED
+```
+
+##### Example 2:
+```
+   -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsiabove(XRP/USD|70)
+```
+Watches RSI of XRP/USD pair and completes when RSI is above 70. Example output:
+```
+2018-01-15 10:07:11: RSI: 45.40
+2018-01-15 10:12:11: RSI: 55.30
+2018-01-15 10:17:11: RSI: 65.41
+TASK COMPLETED
 ```
 
 ## Push messaging configuration ##

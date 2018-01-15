@@ -8,9 +8,9 @@ abstract class WatchRsiTask(exchangeManager: ExchangeManager, private val succes
 
     override fun execute(paramsRaw: String) {
         val params = WatchRsiExtendedParams(paramsRaw)
-        val calculator = RsiCalculator(exchangeManager, params.currencyPair)
+        val dataSource = RsiDataSource(exchangeManager, params.currencyPair)
         val presenter = RsiResultPresenter({ compareRsi(it, params.rsi) }, successAction)
-        presenter.present(calculator)
+        presenter.present(dataSource)
     }
 
     abstract fun compareRsi(actual: Double, target: Double): Boolean

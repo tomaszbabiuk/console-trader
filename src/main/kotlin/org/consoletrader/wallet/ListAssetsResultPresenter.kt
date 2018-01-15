@@ -1,14 +1,14 @@
 package org.consoletrader.wallet
 
-import org.consoletrader.common.Calculator
+import org.consoletrader.common.DataSource
 import org.consoletrader.common.ResultPresenter
 
 class ListAssetsResultPresenter : ResultPresenter<PortfolioAsset> {
 
-    override fun present(calculator: Calculator<PortfolioAsset>) {
+    override fun present(dataSource: DataSource<PortfolioAsset>) {
         var usdSum = 0.0
-        calculator
-                .calculate()
+        dataSource
+                .createObservable()
                 .doOnComplete {
                     println("=========================")
                     println("TOTAL $usdSum$")

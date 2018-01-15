@@ -9,8 +9,8 @@ class WalletTask(exchangeManager: ExchangeManager) : Task(exchangeManager) {
     }
 
     override fun execute(paramsRaw: String) {
-        val calculator = ListAssetsCalculator(exchangeManager)
+        val dataSource = ListAssetsDataSource(exchangeManager)
         val presenter = ListAssetsResultPresenter()
-        presenter.present(calculator)
+        presenter.present(dataSource)
     }
 }
