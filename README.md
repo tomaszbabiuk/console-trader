@@ -82,6 +82,27 @@ Watches RSI of XRP/USD pair and completes when RSI is above 70. Example output:
 TASK COMPLETED
 ```
 
+### Sending notifications via pushover service
+```
+    -exchange:EXCHANGE_NAME -key:YOUR_EXCHANGE_KEY -secret:YOUR_EXCHANGE_SECRET -action:pushoveralert([PUSHOVER_API_KEY]|[PUSHOVER_USER_ID]|[MESSAGE])
+```
+
+##### Example:
+```
+    -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -action:pushoveralert(XxxxxXxxxxX|XxxxxXxxxxX|rsi_above_30)
+```
+
+If you want to use spaces in message you can wrap whole -action in quotation marks:
+```
+    -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX "-action:pushoveralert(XxxxxXxxxxX|XxxxxXxxxxX|rsi above 30)"
+```
+
+Sending only push message is useless, so you can combine this with any other task, for example you can send push when RSI for XRP is above 30
+```
+    -exchange:bitfinex -key:XxxxxXxxxxX -secret:XxxxxXxxxxX -task:watchrsiabove(XRP/USD|37) "-action:pushoveralert(XxxxxXxxxxX|XxxxxXxxxxX|rsi above 30)"
+```
+
+
 ## Push messaging configuration ##
 If you want to have push messaging you need to configure account on https://pushover.net/. This website allow to sending pushes for 7 days free, after that you need to buy premium for 5 usd (single payment, no subscription) or create a new account
 1. Create account on https://pushover.net/
