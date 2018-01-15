@@ -10,12 +10,12 @@ open class WatchRsiExtendedParams(taskRaw: String) : ExtendedParams() {
 
     init {
         try {
-            val taskParamsRaw = taskRaw.substring(taskRaw.indexOf("(") + 1, taskRaw.indexOf(")"))
-            val taskParamsSplit = taskParamsRaw.split("|")
+            val taskParamsSplit = splitParameters(taskRaw)
             currencyPair = CurrencyPair(taskParamsSplit[0])
             val rsiRaw = taskParamsSplit[1]
             rsi = rsiRaw.toDouble()
         } catch (ex: Exception) {
+
             throw ParsingParameterException("Error creating task params", ex)
         }
     }
