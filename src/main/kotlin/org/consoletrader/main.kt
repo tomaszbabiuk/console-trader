@@ -3,6 +3,8 @@ package org.consoletrader
 import io.reactivex.functions.Action
 import org.consoletrader.common.ExchangeMatcher
 import org.consoletrader.common.Task
+import org.consoletrader.orders.MarketBuyTask
+import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.rsi.WatchRsiAboveTask
 import org.consoletrader.rsi.WatchRsiBelowTask
 import org.consoletrader.wallet.WalletTask
@@ -26,55 +28,33 @@ fun main(args: Array<String>) {
         return
     }
 
+    var actionToExecute = Action {
+        println("TASK COMPLETED")
+    }
+
+    if (actionRaw != null) {
+        val actions = ArrayList<Task>()
+        actions += MarketBuyTask(exchangeManager)
+        actions += MarketSellTask(exchangeManager)
+        val matchedAction = actions.firstOrNull { it.match(actionRaw) }
+        if (matchedAction != null) {
+            actionToExecute = Action {
+                matchedAction.execute(actionRaw)
+            }
+        }
+    }
+
     val tasks = ArrayList<Task>()
     tasks += WalletTask(exchangeManager)
-    tasks += WatchRsiAboveTask(exchangeManager, Action { println("Yupi... RSI above")})
-    tasks += WatchRsiBelowTask(exchangeManager, Action { println("Yupi... RSI below")})
+    tasks += MarketBuyTask(exchangeManager)
+    tasks += MarketSellTask(exchangeManager)
+    tasks += WatchRsiAboveTask(exchangeManager, actionToExecute)
+    tasks += WatchRsiBelowTask(exchangeManager, actionToExecute)
 
     tasks
         .filter { it.match(taskRaw) }
         .forEach { it.execute(taskRaw) }
 }
-
-
-//private fun processBuyWhenRsiBelow(exchangeManager: ExchangeManager, args: Array<String>) {
-//    val pair = checkArgument(args, "pair", "Market pair not defined. example pairs are: BTC/USD, XRP/ETH, etc.")
-//    val amount = checkArgument(args, "amount", "Amount not defined!")
-//    val rsi = checkArgument(args, "rsi", "RSI value to trigger")
-//
-//    if (pair != null && rsi != null && amount != null) {
-//        val pairParsed = CurrencyPair(pair)
-//        val amountInBaseCurrency = amount.endsWith(pairParsed.base.toString(), true)
-//        val amountInCounterCurrency = amount.endsWith(pairParsed.counter.toString(), true)
-//
-//        if (amountInBaseCurrency || amountInCounterCurrency) {
-//            val rsiParsed = rsi.toDouble()
-//            val calculator = RsiCalculator(exchangeManager, pairParsed)
-//            val successAction = Action {
-//                println("RSI is below target, placing market order to buy some!")
-//                val tradeService = exchangeManager.exchange.tradeService
-//                val amountParsed = amount
-//                        .replace(pairParsed.base.toString(),"")
-//                        .replace(pairParsed.counter.toString(), "")
-//                        .toBigDecimal()
-//
-//                if (amountInCounterCurrency) {
-//                    val tickerPrice = exchangeManager.exchange.marketDataService.getTicker(pairParsed).bid * BigDecimal.valueOf(1.05)
-//                    val amountToBuy: BigDecimal = amountParsed.divide(tickerPrice, 2, RoundingMode.DOWN)
-//                    println("Trying to buy $amountToBuy${pairParsed.base} for about $amountParsed${pairParsed.counter} ")
-//                    tradeService.placeMarketOrder(MarketOrder(Order.OrderType.BID, amountToBuy, pairParsed))
-//                } else {
-//                    println("Trying to buy $amountParsed${pairParsed.base}")
-//                    tradeService.placeMarketOrder(MarketOrder(Order.OrderType.BID, amountParsed, pairParsed))
-//                }
-//            }
-//            val presenter = RsiResultPresenter({ it < rsiParsed }, successAction)
-//            presenter.present(calculator)
-//        } else {
-//            println("The amount should be in base or counter currency, eg: 10 ${pairParsed.base} or 15${pairParsed.counter}")
-//        }
-//    }
-//}
 
 fun checkArgument(args: Array<String>, parameter: String, message: String? = null): String? {
     val paramDefined = args.any { it.startsWith("-$parameter:") }
@@ -92,13 +72,42 @@ fun checkArgument(args: Array<String>, parameter: String, message: String? = nul
 }
 
 fun printUsage() {
-    println("USAGE:")
-    println("-exchange:[exchange] -key:[key] -secret:[secret] -task:wallet")
-    println("-exchange:[exchange] -key:[key] -secret:[secret] -task:watchrsibelow(XRP/USD|30) -action:marketbuy(XRP/USD|10XRP)")
+    println("""
+        USAGE:
+        -exchange:[exchange] -key:[key] -secret:[secret] -task:[task] [-action:[action]]
+
+        Parameters:
+        [exchange] - exchange name
+        [key] - exchange api key
+        [secret] - exchange api secret
+        [task] - task to do (the list to do)
+        [action] - optional, contains additional action to perform when task is completed
+
+        Exchanges:
+        -exchange:bitfinex (tested)
+        -exchange:binance (testing in process)
+        -exchange:bitmarket (in development)
+
+        Tasks:
+        -task:wallet - prints list of assets (portfolio/wallet)
+        -task:marketbuy([pair]|[value]) - places market buy order on specific pair
+        -task:marketsell([pair]|[value]) - places market sell order on specific pair
+        -task:watchrsiabove([pair]|[rsi]) - observes RSI on specific pair and completes when the value is above threshold provided
+        -task:watchrsibelow([pair]|[rsi]) - observes RSI on specific pair and completes when the value is below threshold provided
+
+        Actions:
+        -action:marketbuy([pair]|[value]) - places market buy order on specific pair
+        -action:marketsell([pair]|[value]) - places market sell order on specific pair
+
+        Examples of tasks/actions (syntax is the same):
+        watchrsiabove(XRP/USD|70) - observes RSI of XRP/USD pair and completes when RSI > 70)
+        watchrsibelow(XRP/USD|30) - observes RSI of XRP/USD pair and completes when RSI < 30)
+        marketbuy(XRP/USD|10XRP) places market order on XRP/USD pair to buy 10XRP
+        marketbuy(XRP/USD|10USD) places market order on XRP/USD pair to buy XRP for about 10USD, depending on current market price
+    """.trimIndent())
+
 
     //TODO:
     //-task:gmailalert(gmailusername|gmailpassword)
     //-task:pushoveralert(username|apikey)
-    //-condition:rsibelow(XRP/USD|30)
-    //-condition:rsiabove(XRP/USD|70)
 }

@@ -1,12 +1,12 @@
 package org.consoletrader.orders
 
 import org.consoletrader.common.ParsingParameterException
-import org.consoletrader.common.TaskParams
+import org.consoletrader.common.ExtendedParams
 import org.knowm.xchange.currency.Currency
 import org.knowm.xchange.currency.CurrencyPair
 import java.math.BigDecimal
 
-open class MarketTaskParams(taskRaw: String) : TaskParams() {
+open class MarketExtendedParams(taskRaw: String) : ExtendedParams() {
     val currencyPair: CurrencyPair
     val amountValue: BigDecimal
     val amountCurrency: Currency

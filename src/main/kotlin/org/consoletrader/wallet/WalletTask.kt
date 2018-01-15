@@ -4,11 +4,11 @@ import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
 
 class WalletTask(exchangeManager: ExchangeManager) : Task(exchangeManager) {
-    override fun match(taskRaw: String): Boolean {
-        return taskRaw == "wallet"
+    override fun match(paramsRaw: String): Boolean {
+        return paramsRaw == "wallet"
     }
 
-    override fun execute(taskRaw: String) {
+    override fun execute(paramsRaw: String) {
         val calculator = ListAssetsCalculator(exchangeManager)
         val presenter = ListAssetsResultPresenter()
         presenter.present(calculator)

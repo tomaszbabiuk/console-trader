@@ -6,8 +6,8 @@ import org.consoletrader.common.Task
 
 abstract class WatchRsiTask(exchangeManager: ExchangeManager, private val successAction: Action) : Task(exchangeManager) {
 
-    override fun execute(taskRaw: String) {
-        val params = WatchRsiTaskParams(taskRaw)
+    override fun execute(paramsRaw: String) {
+        val params = WatchRsiExtendedParams(paramsRaw)
         val calculator = RsiCalculator(exchangeManager, params.currencyPair)
         val presenter = RsiResultPresenter({ compareRsi(it, params.rsi) }, successAction)
         presenter.present(calculator)
@@ -18,8 +18,8 @@ abstract class WatchRsiTask(exchangeManager: ExchangeManager, private val succes
 
 class WatchRsiBelowTask(exchangeManager: ExchangeManager,
                         successAction: Action) : WatchRsiTask(exchangeManager, successAction) {
-    override fun match(taskRaw: String): Boolean {
-        return taskRaw.startsWith("watchrsibelow")
+    override fun match(paramsRaw: String): Boolean {
+        return paramsRaw.startsWith("watchrsibelow")
     }
 
     override fun compareRsi(actual: Double, target: Double): Boolean {
@@ -29,8 +29,8 @@ class WatchRsiBelowTask(exchangeManager: ExchangeManager,
 
 class WatchRsiAboveTask(exchangeManager: ExchangeManager,
                         successAction: Action) : WatchRsiTask(exchangeManager, successAction) {
-    override fun match(taskRaw: String): Boolean {
-        return taskRaw.startsWith("watchrsiabove")
+    override fun match(paramsRaw: String): Boolean {
+        return paramsRaw.startsWith("watchrsiabove")
     }
 
     override fun compareRsi(actual: Double, target: Double): Boolean {

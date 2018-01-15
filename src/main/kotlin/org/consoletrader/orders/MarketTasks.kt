@@ -8,8 +8,8 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 abstract class MarketTask(exchangeManager: ExchangeManager, private val orderType: Order.OrderType) : Task(exchangeManager) {
-    override fun execute(taskRaw: String) {
-        val params = MarketTaskParams(taskRaw)
+    override fun execute(paramsRaw: String) {
+        val params = MarketExtendedParams(paramsRaw)
         val tradeService = exchangeManager.exchange.tradeService
         if (params.amountCurrency == params.currencyPair.counter) {
             val tickerPrice = exchangeManager.exchange.marketDataService.getTicker(params.currencyPair).bid * BigDecimal.valueOf(1.05)
@@ -24,13 +24,13 @@ abstract class MarketTask(exchangeManager: ExchangeManager, private val orderTyp
 }
 
 class MarketBuyTask(exchangeManager: ExchangeManager) : MarketTask(exchangeManager, Order.OrderType.BID) {
-    override fun match(taskRaw: String): Boolean {
-        return taskRaw.startsWith("marketbuy")
+    override fun match(paramsRaw: String): Boolean {
+        return paramsRaw.startsWith("marketbuy")
     }
 }
 
 class MarketSellTask(exchangeManager: ExchangeManager) : MarketTask(exchangeManager, Order.OrderType.ASK) {
-    override fun match(taskRaw: String): Boolean {
-        return taskRaw.startsWith("marketsell")
+    override fun match(paramsRaw: String): Boolean {
+        return paramsRaw.startsWith("marketsell")
     }
 }
