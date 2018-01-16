@@ -1,23 +1,23 @@
-package org.consoletrader.rsi
+package org.consoletrader.indicators
 
 import io.reactivex.functions.Action
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
 
-abstract class WatchRsiTask(exchangeManager: ExchangeManager, private val successAction: Action) : Task(exchangeManager) {
+abstract class WatchRSITask(exchangeManager: ExchangeManager, private val successAction: Action) : Task(exchangeManager) {
 
     override fun execute(paramsRaw: String) {
-        val params = WatchRsiExtendedParams(paramsRaw)
-        val dataSource = RsiDataSource(exchangeManager, params.currencyPair)
-        val presenter = RsiResultPresenter({ compareRsi(it, params.rsi) }, successAction)
+        val params = WatchRSIExtendedParams(paramsRaw)
+        val dataSource = RSIDataSource(exchangeManager, params.currencyPair)
+        val presenter = IndicatorResultPresenter<RSIValue>({ compareRsi(it.level, params.rsi) }, successAction)
         presenter.present(dataSource)
     }
 
     abstract fun compareRsi(actual: Double, target: Double): Boolean
 }
 
-class WatchRsiBelowTask(exchangeManager: ExchangeManager,
-                        successAction: Action) : WatchRsiTask(exchangeManager, successAction) {
+class WatchRSIBelowTask(exchangeManager: ExchangeManager,
+                        successAction: Action) : WatchRSITask(exchangeManager, successAction) {
     override fun match(paramsRaw: String): Boolean {
         return paramsRaw.startsWith("watchrsibelow")
     }
@@ -27,8 +27,8 @@ class WatchRsiBelowTask(exchangeManager: ExchangeManager,
     }
 }
 
-class WatchRsiAboveTask(exchangeManager: ExchangeManager,
-                        successAction: Action) : WatchRsiTask(exchangeManager, successAction) {
+class WatchRSIAboveTask(exchangeManager: ExchangeManager,
+                        successAction: Action) : WatchRSITask(exchangeManager, successAction) {
     override fun match(paramsRaw: String): Boolean {
         return paramsRaw.startsWith("watchrsiabove")
     }

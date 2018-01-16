@@ -3,11 +3,13 @@ package org.consoletrader
 import io.reactivex.functions.Action
 import org.consoletrader.common.ExchangeMatcher
 import org.consoletrader.common.Task
+import org.consoletrader.indicators.WatchMACDCrossDownTask
+import org.consoletrader.indicators.WatchMACDCrossUpTask
 import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
-import org.consoletrader.rsi.WatchRsiAboveTask
-import org.consoletrader.rsi.WatchRsiBelowTask
+import org.consoletrader.indicators.WatchRSIAboveTask
+import org.consoletrader.indicators.WatchRSIBelowTask
 import org.consoletrader.wallet.WalletTask
 
 
@@ -50,8 +52,10 @@ fun main(args: Array<String>) {
     tasks += WalletTask(exchangeManager)
     tasks += MarketBuyTask(exchangeManager)
     tasks += MarketSellTask(exchangeManager)
-    tasks += WatchRsiAboveTask(exchangeManager, actionToExecute)
-    tasks += WatchRsiBelowTask(exchangeManager, actionToExecute)
+    tasks += WatchRSIAboveTask(exchangeManager, actionToExecute)
+    tasks += WatchRSIBelowTask(exchangeManager, actionToExecute)
+    tasks += WatchMACDCrossDownTask(exchangeManager, actionToExecute)
+    tasks += WatchMACDCrossUpTask(exchangeManager, actionToExecute)
     tasks += PushoverNotificationTask(exchangeManager)
 
     tasks
@@ -97,6 +101,8 @@ fun printUsage() {
         -task:marketsell([pair]|[value]) - places market sell order on specific pair
         -task:watchrsiabove([pair]|[rsi]) - observes RSI on specific pair and completes when the value is above threshold provided
         -task:watchrsibelow([pair]|[rsi]) - observes RSI on specific pair and completes when the value is below threshold provided
+        -task:watchmacdcrossdown([pair]) - observes MACD on specific pair and completes when cross down is detected
+        -task:watchmacdcrossup([pair]) - observes RSI on specific pair and completes when cross up is detected
 
         Actions:
         -action:marketbuy([pair]|[value]) - places market buy order on specific pair
