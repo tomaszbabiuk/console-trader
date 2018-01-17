@@ -5,6 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface BitmarketPublicApi {
-    @GET("/json/{pair}/ticker.json")
+    @GET("/graphs/{pair}/1d.json")
     fun queryCandles(@Query("pair") pair: String): Single<List<BitmarketTickerResponse>>
 }

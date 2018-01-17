@@ -16,7 +16,7 @@ abstract class WatchRSITask(exchangeManager: ExchangeManager, private val succes
     override fun execute(paramsRaw: String) {
         val params = WatchRSIExtendedParams(paramsRaw)
         val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
-        val presenter = IndicatorResultPresenter({ compareRsi(it, params.rsi) }, successAction)
+        val presenter = WatchPeriodicDataPresenter<TimeSeries>({ compareRsi(it, params.rsi) }, successAction)
         presenter.present(dataSource)
     }
 

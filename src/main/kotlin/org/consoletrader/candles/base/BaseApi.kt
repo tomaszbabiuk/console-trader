@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 abstract class BaseApi<out T>(anApi: Class<T>,
                               endpoint: String,
-                              timeout: Long = 30,
+                              timeout: Long = 5,
                               timeUnit: TimeUnit = TimeUnit.SECONDS) {
 
     private val api: T

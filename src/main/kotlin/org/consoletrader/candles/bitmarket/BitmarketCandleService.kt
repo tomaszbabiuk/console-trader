@@ -12,7 +12,7 @@ import java.util.*
 
 class BitmarketCandleService : BaseApi<BitmarketPublicApi>(
         anApi = BitmarketPublicApi::class.java,
-        endpoint = "https://www.bitmarket.pl/"),
+        endpoint = "https://www.bitmarket.pl"),
         CandlesService {
 
     override fun getCandles(pair: CurrencyPair): Single<MutableList<Tick>> {
