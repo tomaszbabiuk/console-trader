@@ -3,6 +3,7 @@ package org.consoletrader.indicators
 import io.reactivex.Observable
 import io.reactivex.functions.Action
 import org.consoletrader.common.DataSource
+import org.consoletrader.common.IndicatorsSet
 import org.consoletrader.common.ResultPresenter
 import org.slf4j.LoggerFactory
 import org.ta4j.core.TimeSeries

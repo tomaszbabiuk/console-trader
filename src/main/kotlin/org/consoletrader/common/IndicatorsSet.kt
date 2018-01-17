@@ -1,4 +1,4 @@
-package org.consoletrader.indicators
+package org.consoletrader.common
 
 import org.ta4j.core.TimeSeries
 import org.ta4j.core.indicators.*

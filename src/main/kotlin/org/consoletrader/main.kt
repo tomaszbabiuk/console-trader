@@ -3,13 +3,10 @@ package org.consoletrader
 import io.reactivex.functions.Action
 import org.consoletrader.common.ExchangeMatcher
 import org.consoletrader.common.Task
-import org.consoletrader.indicators.WatchMACDCrossDownTask
-import org.consoletrader.indicators.WatchMACDCrossUpTask
+import org.consoletrader.indicators.*
 import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
-import org.consoletrader.indicators.WatchRSIAboveTask
-import org.consoletrader.indicators.WatchRSIBelowTask
 import org.consoletrader.wallet.WalletTask
 
 
@@ -56,6 +53,7 @@ fun main(args: Array<String>) {
     tasks += WatchRSIBelowTask(exchangeManager, actionToExecute)
     tasks += WatchMACDCrossDownTask(exchangeManager, actionToExecute)
     tasks += WatchMACDCrossUpTask(exchangeManager, actionToExecute)
+    tasks += MatchStrategyTask(exchangeManager)
     tasks += PushoverNotificationTask(exchangeManager)
 
     tasks

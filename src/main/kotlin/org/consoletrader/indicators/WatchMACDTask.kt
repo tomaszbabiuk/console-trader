@@ -14,7 +14,7 @@ import org.ta4j.core.trading.rules.OverIndicatorRule
 abstract class WatchMACDTask(exchangeManager: ExchangeManager, private val successAction: Action) : Task(exchangeManager) {
 
     override fun execute(paramsRaw: String) {
-        val params = WatchMACDExtendedParams(paramsRaw)
+        val params = PairOnlyExtendedParams(paramsRaw)
         val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
         val presenter = IndicatorResultPresenter({ checkIfRuleIsSatisfied(it) }, successAction)
         presenter.present(dataSource)
