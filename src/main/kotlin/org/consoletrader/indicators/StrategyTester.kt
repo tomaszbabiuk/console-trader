@@ -12,7 +12,7 @@ import org.ta4j.core.trading.rules.OverIndicatorRule
 import org.ta4j.core.trading.rules.UnderIndicatorRule
 
 
-class MatchStrategyTask(exchangeManager: ExchangeManager) : Task(exchangeManager) {
+class MatchStrategyTask(val exchangeManager: ExchangeManager) : Task {
     override fun match(paramsRaw: String): Boolean {
         return paramsRaw.startsWith("matchstrategy")
     }

@@ -1,11 +1,9 @@
 package org.consoletrader
 
 import io.reactivex.functions.Action
-import org.consoletrader.common.ExchangeMatcher
-import org.consoletrader.common.Task
+import org.consoletrader.common.*
 import org.consoletrader.indicators.*
-import org.consoletrader.marketcap.MarketcapService
-import org.consoletrader.marketcap.WatchMarketCapTask
+import org.consoletrader.marketcap.*
 import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
@@ -34,6 +32,13 @@ fun main(args: Array<String>) {
         println("TASK COMPLETED")
     }
 
+    val factories = ArrayList<WatcherFactory>()
+    factories.add(MarketCapAboveWatcherFactory())
+    factories.add(MarketCapBelowWatcherFactory())
+
+    val conditions = buildConditions(args, factories)
+
+
     if (actionRaw != null) {
         val actions = ArrayList<Task>()
         actions += MarketBuyTask(exchangeManager)
@@ -47,6 +52,7 @@ fun main(args: Array<String>) {
         }
     }
 
+
     val tasks = ArrayList<Task>()
     tasks += WalletTask(exchangeManager)
     tasks += MarketBuyTask(exchangeManager)
@@ -56,12 +62,12 @@ fun main(args: Array<String>) {
     tasks += WatchMACDCrossDownTask(exchangeManager, actionToExecute)
     tasks += WatchMACDCrossUpTask(exchangeManager, actionToExecute)
     tasks += MatchStrategyTask(exchangeManager)
-    tasks += WatchMarketCapTask(exchangeManager, actionToExecute)
     tasks += PushoverNotificationTask(exchangeManager)
+    tasks += IfTask(conditions, actionToExecute)
 
     tasks
-        .filter { it.match(taskRaw) }
-        .forEach { it.execute(taskRaw) }
+            .filter { it.match(taskRaw) }
+            .forEach { it.execute(taskRaw) }
 }
 
 fun checkArgument(args: Array<String>, parameter: String, message: String? = null): String? {
@@ -79,10 +85,30 @@ fun checkArgument(args: Array<String>, parameter: String, message: String? = nul
     return null
 }
 
+fun buildConditions(args: Array<String>, factories: ArrayList<WatcherFactory>): ArrayList<Condition> {
+    val result = ArrayList<Condition>()
+    args
+            .filter { it.startsWith("-if:") }
+            .forEach { argumentRaw: String ->
+                val paramsRaw = argumentRaw.substringAfter(':')
+                factories.forEach {
+                    if (it.match(paramsRaw)) {
+                        val factory = it.create(paramsRaw)
+                        result.add(factory)
+                    }
+                }
+            }
+
+    return result
+}
+
 fun printUsage() {
     println("""
         USAGE:
         -exchange:[exchange] -key:[key] -secret:[secret] -task:[task] [-action:[action]]
+
+        -exchange:[exchange] -key:[key] -secret:[secret] -task:loop(5m) -if:[condition] -if:[condition] [-action:[action]]
+
 
         Parameters:
         [exchange] - exchange name

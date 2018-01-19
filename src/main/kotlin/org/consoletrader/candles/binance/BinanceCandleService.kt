@@ -2,7 +2,7 @@ package org.consoletrader.candles.binance
 
 import io.reactivex.Single
 import org.consoletrader.candles.CandlesService
-import org.consoletrader.candles.base.BaseApi
+import org.consoletrader.common.BaseApi
 import org.knowm.xchange.currency.CurrencyPair
 import org.ta4j.core.BaseTick
 import org.ta4j.core.Tick

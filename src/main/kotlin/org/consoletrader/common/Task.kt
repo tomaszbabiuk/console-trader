@@ -1,6 +1,15 @@
 package org.consoletrader.common
 
-abstract class Task(val exchangeManager: ExchangeManager) {
-    abstract fun execute(paramsRaw: String)
-    abstract fun match(paramsRaw: String): Boolean
+import io.reactivex.Single
+
+interface Matcher {
+    fun match(paramsRaw: String): Boolean
+}
+
+interface Task : Matcher {
+    fun execute(paramsRaw: String)
+}
+
+interface Condition {
+    fun buildEvaluator(): Single<Boolean>
 }

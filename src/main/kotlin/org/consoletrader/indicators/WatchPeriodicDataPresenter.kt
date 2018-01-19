@@ -3,12 +3,14 @@ package org.consoletrader.indicators
 import io.reactivex.Observable
 import io.reactivex.functions.Action
 import org.consoletrader.common.DataSource
+import org.consoletrader.common.IndicatorsSet
 import org.consoletrader.common.ResultPresenter
 import org.slf4j.LoggerFactory
+import org.ta4j.core.TimeSeries
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class WatchPeriodicDataPresenter<T>(private val conditionFunc: (T) -> Boolean, private val completeAction: Action) : ResultPresenter<T> {
+class WatchPeriodicDataPresenter<T>(private val endLoopFunction: (T) -> Boolean, private val completeAction: Action) : ResultPresenter<T> {
     private val logger = LoggerFactory.getLogger(WatchPeriodicDataPresenter::class.java)
 
     override fun present(dataSource: DataSource<T>) {
@@ -21,12 +23,18 @@ class WatchPeriodicDataPresenter<T>(private val conditionFunc: (T) -> Boolean, p
                     }
                 }
                 .takeUntil {
-                    conditionFunc(it)
+                    endLoopFunction(it)
                 }
                 .doOnComplete(completeAction)
                 .blockingSubscribe {
                     val now = Date()
-                    println("${now.toLocaleString()}: $it")
+
+                    if (it is TimeSeries) {
+                        val indicatorsSet = IndicatorsSet(it)
+                        println("[${now.toLocaleString()}]\n$indicatorsSet\n")
+                    } else {
+                        println("${now.toLocaleString()}: $it")
+                    }
                 }
     }
 }

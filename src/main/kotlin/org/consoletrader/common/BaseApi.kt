@@ -1,4 +1,4 @@
-package org.consoletrader.candles.base
+package org.consoletrader.common
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

@@ -11,7 +11,7 @@ import org.ta4j.core.trading.rules.CrossedDownIndicatorRule
 import org.ta4j.core.trading.rules.CrossedUpIndicatorRule
 
 
-abstract class WatchRSITask(exchangeManager: ExchangeManager, private val successAction: Action) : Task(exchangeManager) {
+abstract class WatchRSITask(val exchangeManager: ExchangeManager, private val successAction: Action) : Task {
 
     override fun execute(paramsRaw: String) {
         val params = WatchRSIExtendedParams(paramsRaw)

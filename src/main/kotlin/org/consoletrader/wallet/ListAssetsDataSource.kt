@@ -1,6 +1,7 @@
 package org.consoletrader.wallet
 
 import io.reactivex.Observable
+import io.reactivex.Single
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.DataSource
 import org.knowm.xchange.currency.CurrencyPair
@@ -60,5 +61,9 @@ open class ListAssetsDataSource(exchangeManager: ExchangeManager) : DataSource<P
         }
 
         return null
+    }
+
+    override fun createSingle(): Single<PortfolioAsset> {
+        return null!!
     }
 }

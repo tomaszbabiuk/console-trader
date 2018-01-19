@@ -3,7 +3,7 @@ package org.consoletrader.wallet
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
 
-class WalletTask(exchangeManager: ExchangeManager) : Task(exchangeManager) {
+class WalletTask(val exchangeManager: ExchangeManager) : Task {
     override fun match(paramsRaw: String): Boolean {
         return paramsRaw == "wallet"
     }

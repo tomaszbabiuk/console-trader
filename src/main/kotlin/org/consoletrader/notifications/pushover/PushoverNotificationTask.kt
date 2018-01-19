@@ -4,7 +4,7 @@ import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
 import org.consoletrader.notifications.NotificationExtendedParams
 
-class PushoverNotificationTask(exchangeManager: ExchangeManager) : Task(exchangeManager) {
+class PushoverNotificationTask(val exchangeManager: ExchangeManager) : Task {
 
     val sender = PushoverNotificationSender()
 

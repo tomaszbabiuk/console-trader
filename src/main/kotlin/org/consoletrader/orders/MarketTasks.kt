@@ -7,7 +7,7 @@ import org.knowm.xchange.dto.trade.MarketOrder
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-abstract class MarketTask(exchangeManager: ExchangeManager, private val orderType: Order.OrderType) : Task(exchangeManager) {
+abstract class MarketTask(val exchangeManager: ExchangeManager, private val orderType: Order.OrderType) : Task {
     override fun execute(paramsRaw: String) {
         val params = MarketExtendedParams(paramsRaw)
         val tradeService = exchangeManager.exchange.tradeService

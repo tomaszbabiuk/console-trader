@@ -11,7 +11,7 @@ import org.ta4j.core.indicators.helpers.ClosePriceIndicator
 import org.ta4j.core.trading.rules.OverIndicatorRule
 
 
-abstract class WatchMACDTask(exchangeManager: ExchangeManager, private val successAction: Action) : Task(exchangeManager) {
+abstract class WatchMACDTask(val exchangeManager: ExchangeManager, private val successAction: Action) : Task {
 
     override fun execute(paramsRaw: String) {
         val params = PairOnlyExtendedParams(paramsRaw)
