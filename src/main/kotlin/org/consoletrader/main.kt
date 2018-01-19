@@ -27,13 +27,13 @@ fun main(args: Array<String>) {
         return
     }
 
-    val factories = ArrayList<ConditionFactory>()
-    factories.add(MarketCapAboveConditionFactory())
-    factories.add(MarketCapBelowConditionFactory())
-    factories.add(RsiAboveConditionFactory(exchangeManager))
-    factories.add(RsiBelowConditionFactory(exchangeManager))
-    factories.add(MacdCrossUpConditionFactory(exchangeManager))
-    factories.add(MacdCrossDownConditionFactory(exchangeManager))
+    val allConditionFactories = ArrayList<ConditionFactory>()
+    allConditionFactories.add(MarketCapAboveConditionFactory())
+    allConditionFactories.add(MarketCapBelowConditionFactory())
+    allConditionFactories.add(RsiAboveConditionFactory(exchangeManager))
+    allConditionFactories.add(RsiBelowConditionFactory(exchangeManager))
+    allConditionFactories.add(MacdCrossUpConditionFactory(exchangeManager))
+    allConditionFactories.add(MacdCrossDownConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
     allTasks += WalletTask(exchangeManager)
@@ -42,13 +42,13 @@ fun main(args: Array<String>) {
     allTasks += MatchStrategyTask(exchangeManager)
     allTasks += PushoverNotificationTask(exchangeManager)
 
-    val taskToExecute = allTasks
-            .firstOrNull { it.match(taskRaw) }
+    val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
     if (taskToExecute == null) {
         println("Unknown task!")
+        printUsage()
     } else {
-        val conditions = buildConditions(args, factories)
+        val conditions = buildConditions(args, allConditionFactories)
         if (conditions.isEmpty()) {
             taskToExecute.execute(taskRaw)
         } else {
@@ -101,7 +101,7 @@ fun printUsage() {
         [key] - exchange api key
         [secret] - exchange api secret
         [task] - task to do (the list to do)
-        [when] - optional conditions (all must pass in order to execute the task)
+        [when] - optional conditions (all must pass before task is executed), conditions are checked in a 5 minutes loop until program is terminated
 
         Exchanges:
         -exchange:bitfinex (tested)
@@ -125,8 +125,4 @@ fun printUsage() {
         -when:marketcapbelow(100) - checks if market cap is below 100$
         -when:marketcapbelow(100BLN) - checks if market cap is below 100 billions $
     """.trimIndent())
-
-
-    //TODO:
-    //-task:gmailalert(gmailusername|gmailpassword|message)
 }
