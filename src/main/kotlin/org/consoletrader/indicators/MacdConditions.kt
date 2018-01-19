@@ -35,13 +35,13 @@ class MacdCrossUpCondition(exchangeManager: ExchangeManager, params: PairOnlyExt
         val prevMacd = macdIndicator.getValue(series.tickCount - 2).toDouble()
         val prevMacdEma = macdIndicator.getValue(series.tickCount - 2).toDouble()
         val prevMacdHist = prevMacd - prevMacdEma
-        val ruleResult = (prevMacdHist < 0) && (macdHist > 0)
-        val comment = if (ruleResult) {
+        val passed = (prevMacdHist < 0) && (macdHist > 0)
+        val comment = if (passed) {
             "[TRUE] MACD of ${params.currencyPair} crossed up ($prevMacd/$macd)"
         } else {
             "[FALSE] MACD of ${params.currencyPair} didn't cross up ($prevMacd/$macd)"
         }
-        return EvaluationResult(ruleResult, comment)
+        return EvaluationResult(passed, comment)
     }
 }
 
@@ -59,13 +59,13 @@ class MacdCrossDownCondition(exchangeManager: ExchangeManager, params: PairOnlyE
         val prevMacd = macdIndicator.getValue(series.tickCount - 2).toDouble()
         val prevMacdEma = macdIndicator.getValue(series.tickCount - 2).toDouble()
         val prevMacdHist = prevMacd - prevMacdEma
-        val ruleResult = (prevMacdHist > 0) && (macdHist < 0)
-        val comment = if (ruleResult) {
+        val passed = (prevMacdHist > 0) && (macdHist < 0)
+        val comment = if (passed) {
             "[TRUE] MACD of ${params.currencyPair} crossed down ($prevMacd/$macd)"
         } else {
             "[FALSE] MACD of ${params.currencyPair} didn't cross down ($prevMacd/$macd)"
         }
-        return EvaluationResult(ruleResult, comment)
+        return EvaluationResult(passed, comment)
     }
 }
 

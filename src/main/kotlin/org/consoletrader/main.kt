@@ -30,10 +30,12 @@ fun main(args: Array<String>) {
     val allConditionFactories = ArrayList<ConditionFactory>()
     allConditionFactories.add(MarketCapAboveConditionFactory())
     allConditionFactories.add(MarketCapBelowConditionFactory())
-    allConditionFactories.add(RsiAboveConditionFactory(exchangeManager))
-    allConditionFactories.add(RsiBelowConditionFactory(exchangeManager))
+    allConditionFactories.add(RsiAboveConditionConditionFactory(exchangeManager))
+    allConditionFactories.add(RsiBelowConditionConditionFactory(exchangeManager))
     allConditionFactories.add(MacdCrossUpConditionFactory(exchangeManager))
     allConditionFactories.add(MacdCrossDownConditionFactory(exchangeManager))
+    allConditionFactories.add(ClosePriceAboveConditionFactory(exchangeManager))
+    allConditionFactories.add(ClosePriceBelowConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
     allTasks += WalletTask(exchangeManager)
@@ -118,6 +120,14 @@ fun printUsage() {
         RSI
         -when:rsiabove(XRP/USD|70) - observes RSI of XRP/USD pair and completes when RSI > 70)
         -when:rsibelow(XRP/USD|30) - observes RSI of XRP/USD pair and completes when RSI < 30)
+
+        CLOSE PRICE
+        -when:closepriceabove(XRP/USD|1000) - observes close price of XRP/USD pair and completes when its > 1000)
+        -when:closepricebelow(XRP/USD|1000) - observes close price of XRP/USD pair and completes when its < 1000)
+
+        MACD
+        -when:macdcrossup(XRP/USD) - observes MACD of XRP/USD pair and completes when the indicator crosses up
+        -when:macdcrossdown(XRP/USD) - observes MACD of XRP/USD pair and completes when the indicator crosses down
 
         MARKETCAP
         -when:marketcapabove(100) - checks if market cap is above 100$
