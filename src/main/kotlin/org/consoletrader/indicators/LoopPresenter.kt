@@ -28,13 +28,7 @@ class LoopPresenter<T>(private val endLoopFunction: (T) -> Boolean, private val 
                 .doOnComplete(completeAction)
                 .blockingSubscribe {
                     val now = Date()
-
-                    if (it is TimeSeries) {
-                        val indicatorsSet = IndicatorsSet(it)
-                        println("[${now.toLocaleString()}]\n$indicatorsSet\n")
-                    } else {
-                        println("${now.toLocaleString()}: $it")
-                    }
+                    println("${now.toLocaleString()}: $it")
                 }
     }
 }

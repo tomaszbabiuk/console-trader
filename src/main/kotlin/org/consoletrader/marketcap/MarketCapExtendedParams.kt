@@ -7,9 +7,14 @@ class MarketCapExtendedParams(taskRaw: String) : ExtendedParams() {
     val amount: Double
 
     init {
-        try {
+        amount = try {
             val paramsArray = splitParameters(taskRaw)
-            amount = paramsArray[0].toDouble()
+            val amountRaw = paramsArray[0]
+            if (amountRaw.toLowerCase().endsWith("bln")) {
+                amountRaw.toLowerCase().removeSuffix("bln").toDouble() * 10e8
+            } else {
+                amountRaw.toDouble()
+            }
         } catch (ex: Exception) {
             throw ParsingParameterException("Error creating task params", ex)
         }
