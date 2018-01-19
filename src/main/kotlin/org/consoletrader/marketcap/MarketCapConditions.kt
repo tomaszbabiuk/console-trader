@@ -2,60 +2,43 @@ package org.consoletrader.marketcap
 
 import io.reactivex.Single
 import org.consoletrader.common.Condition
-import org.consoletrader.common.WatcherFactory
+import org.consoletrader.common.EvaluationResult
 import org.consoletrader.marketcap.coinmarketcap.CoinmarketcapMarketcapService
 
-abstract class MarketCapWatcherFactory : WatcherFactory {
-    override fun create(paramsRaw: String): Condition {
-        val marketCapExtendedParams = MarketCapExtendedParams(paramsRaw)
-        return create(marketCapExtendedParams)
-    }
-
-    abstract fun create(marketCap: MarketCapExtendedParams): Condition
-}
-
-class MarketCapAboveWatcherFactory : MarketCapWatcherFactory() {
-    override fun create(marketCap: MarketCapExtendedParams): Condition {
-        return MarketCapAboveCondition(marketCap)
-    }
-
-    override fun match(paramsRaw: String): Boolean {
-        return paramsRaw.startsWith("marketcapabove")
-    }
-}
-
-class MarketCapBelowWatcherFactory : MarketCapWatcherFactory() {
-    override fun create(marketCap: MarketCapExtendedParams): Condition {
-        return MarketCapBelowCondition(marketCap)
-    }
-
-    override fun match(paramsRaw: String): Boolean {
-        return paramsRaw.startsWith("marketcapbelow")
-    }
-}
-
-abstract class MarketCapCondition(private val params: MarketCapExtendedParams) : Condition {
+abstract class MarketCapCondition : Condition {
     private val marketCapService = CoinmarketcapMarketcapService()
 
-    override fun buildEvaluator(): Single<Boolean> {
+    override fun buildEvaluator(): Single<EvaluationResult> {
         return marketCapService
                 .createSingle()
                 .map(this::mapper)
-                .onErrorResumeNext { _ -> Single.just(false) }
+                .onErrorResumeNext { throwable -> Single.just(EvaluationResult(false, "Exception: $throwable")) }
     }
 
-    abstract fun mapper(marketCap:MarketCap): Boolean
+    abstract fun mapper(marketCap:MarketCap): EvaluationResult
 }
 
 
-class MarketCapAboveCondition(private val params: MarketCapExtendedParams) : MarketCapCondition(params) {
-    override fun mapper(marketCap: MarketCap): Boolean {
-        return marketCap.value > params.amount//To change body of created functions use File | Settings | File Templates.
+class MarketCapAboveCondition(private val params: MarketCapExtendedParams) : MarketCapCondition() {
+    override fun mapper(marketCap: MarketCap): EvaluationResult {
+        val result = marketCap.value > params.amount
+        val comment = if (result) {
+            "[TRUE] Marketcap: $marketCap > ${MarketCap(params.amount)}"
+        } else {
+            "[FALSE] Marketcap: $marketCap < ${MarketCap(params.amount)}"
+        }
+        return EvaluationResult(result, comment)
     }
 }
 
-class MarketCapBelowCondition(private val params: MarketCapExtendedParams) : MarketCapCondition(params) {
-    override fun mapper(marketCap: MarketCap): Boolean {
-        return marketCap.value < params.amount//To change body of created functions use File | Settings | File Templates.
+class MarketCapBelowCondition(private val params: MarketCapExtendedParams) : MarketCapCondition() {
+    override fun mapper(marketCap: MarketCap): EvaluationResult {
+        val result = marketCap.value < params.amount
+        val comment = if (result) {
+            "[TRUE] Marketcap: $marketCap < ${MarketCap(params.amount)}"
+        } else {
+            "[FALSE] Marketcap: $marketCap > ${MarketCap(params.amount)}"
+        }
+        return EvaluationResult(result, comment)
     }
 }

@@ -1,5 +1,5 @@
 package org.consoletrader.common
 
-interface WatcherFactory : Matcher {
+interface ConditionFactory : Matcher {
     fun create(paramsRaw: String): Condition
 }

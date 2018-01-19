@@ -10,8 +10,8 @@ import org.ta4j.core.TimeSeries
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class WatchPeriodicDataPresenter<T>(private val endLoopFunction: (T) -> Boolean, private val completeAction: Action) : ResultPresenter<T> {
-    private val logger = LoggerFactory.getLogger(WatchPeriodicDataPresenter::class.java)
+class LoopPresenter<T>(private val endLoopFunction: (T) -> Boolean, private val completeAction: Action) : ResultPresenter<T> {
+    private val logger = LoggerFactory.getLogger(LoopPresenter::class.java)
 
     override fun present(dataSource: DataSource<T>) {
         Observable

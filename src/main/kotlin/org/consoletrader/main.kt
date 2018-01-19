@@ -32,9 +32,11 @@ fun main(args: Array<String>) {
         println("TASK COMPLETED")
     }
 
-    val factories = ArrayList<WatcherFactory>()
-    factories.add(MarketCapAboveWatcherFactory())
-    factories.add(MarketCapBelowWatcherFactory())
+    val factories = ArrayList<ConditionFactory>()
+    factories.add(MarketCapAboveConditionFactory())
+    factories.add(MarketCapBelowConditionFactory())
+    factories.add(RsiAboveConditionFactory(exchangeManager))
+    factories.add(RsiBelowConditionFactory(exchangeManager))
 
     val conditions = buildConditions(args, factories)
 
@@ -57,8 +59,6 @@ fun main(args: Array<String>) {
     tasks += WalletTask(exchangeManager)
     tasks += MarketBuyTask(exchangeManager)
     tasks += MarketSellTask(exchangeManager)
-    tasks += WatchRSIAboveTask(exchangeManager, actionToExecute)
-    tasks += WatchRSIBelowTask(exchangeManager, actionToExecute)
     tasks += WatchMACDCrossDownTask(exchangeManager, actionToExecute)
     tasks += WatchMACDCrossUpTask(exchangeManager, actionToExecute)
     tasks += MatchStrategyTask(exchangeManager)
@@ -85,7 +85,7 @@ fun checkArgument(args: Array<String>, parameter: String, message: String? = nul
     return null
 }
 
-fun buildConditions(args: Array<String>, factories: ArrayList<WatcherFactory>): ArrayList<Condition> {
+fun buildConditions(args: Array<String>, factories: ArrayList<ConditionFactory>): ArrayList<Condition> {
     val result = ArrayList<Condition>()
     args
             .filter { it.startsWith("-if:") }

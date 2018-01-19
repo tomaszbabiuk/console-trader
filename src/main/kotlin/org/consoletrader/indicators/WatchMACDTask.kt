@@ -16,7 +16,7 @@ abstract class WatchMACDTask(val exchangeManager: ExchangeManager, private val s
     override fun execute(paramsRaw: String) {
         val params = PairOnlyExtendedParams(paramsRaw)
         val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
-        val presenter = WatchPeriodicDataPresenter<TimeSeries>({ checkIfRuleIsSatisfied(it) }, successAction)
+        val presenter = LoopPresenter<TimeSeries>({ checkIfRuleIsSatisfied(it) }, successAction)
         presenter.present(dataSource)
     }
 

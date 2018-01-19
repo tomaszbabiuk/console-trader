@@ -4,7 +4,7 @@ import org.consoletrader.common.ParsingParameterException
 import org.consoletrader.common.ExtendedParams
 import org.knowm.xchange.currency.CurrencyPair
 
-open class WatchRSIExtendedParams(taskRaw: String) : ExtendedParams() {
+open class RsiExtendedParams(taskRaw: String) : ExtendedParams() {
     val currencyPair: CurrencyPair
     val rsi: Double
 

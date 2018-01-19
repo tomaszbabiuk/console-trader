@@ -11,5 +11,5 @@ interface Task : Matcher {
 }
 
 interface Condition {
-    fun buildEvaluator(): Single<Boolean>
+    fun buildEvaluator(): Single<EvaluationResult>
 }
