@@ -8,19 +8,21 @@ import org.knowm.xchange.currency.CurrencyPair
 import org.ta4j.core.BaseTimeSeries
 import org.ta4j.core.TimeSeries
 
+data class IndicatorsData(val series: TimeSeries, val pair: CurrencyPair)
 
-class IndicatorsDataSource(exchangeManager: ExchangeManager, private val pair: CurrencyPair) : DataSource<TimeSeries> {
+class IndicatorsDataSource(exchangeManager: ExchangeManager, val pair: CurrencyPair) : DataSource<IndicatorsData> {
     private val candleService = exchangeManager.candlesService
 
-    override fun createSingle(): Single<TimeSeries> {
+    override fun createSingle(): Single<IndicatorsData> {
         return candleService
                 .getCandles(pair)
                 .map {
-                    BaseTimeSeries("ta4j_data", it) as TimeSeries
+                    val series = BaseTimeSeries("ta4j_data", it) as TimeSeries
+                    IndicatorsData(series, pair)
                 }
     }
 
-    override fun createObservable(): Observable<TimeSeries> {
+    override fun createObservable(): Observable<IndicatorsData> {
         return createSingle()
                 .toObservable()
     }

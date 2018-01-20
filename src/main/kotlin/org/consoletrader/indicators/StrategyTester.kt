@@ -11,23 +11,27 @@ import org.ta4j.core.indicators.helpers.ClosePriceIndicator
 import org.ta4j.core.trading.rules.OverIndicatorRule
 import org.ta4j.core.trading.rules.UnderIndicatorRule
 
+//strategy tester is in beta stage... don't use it yet as output is not reliable
 class MatchStrategyTask(val exchangeManager: ExchangeManager) : Task {
     override fun match(paramsRaw: String): Boolean {
         return paramsRaw.startsWith("matchstrategy")
     }
 
     override fun execute(paramsRaw: String) {
-        val params = PairOnlyExtendedParams(paramsRaw)
+        val params = PairExtendedParams(paramsRaw)
         println("Calculating best RSI strategy for ${params.currencyPair} pair")
         val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
-        dataSource.createObservable().subscribe { series ->
+        dataSource
+                .createObservable()
+                .map {it.series }
+                .subscribe { series ->
             var bestOversold = 0
             var bestOverbought = 0
             var maxGain = 0.0
             val amount = 1000.0
             var bestTradingRecord: TradingRecord? = null
-            for (oversold in 1..99) {
-                for (overbought in 1..99) {
+            for (oversold in 10..90) {
+                for (overbought in 10..90) {
                     val rsiStrategy = buildRsiStrategy(series, Decimal.valueOf(overbought), Decimal.valueOf(oversold))
                     val seriesManager = TimeSeriesManager(series)
                     val tradingRecord = seriesManager.run(rsiStrategy, Order.OrderType.BUY, Decimal.valueOf(10.0))
@@ -41,7 +45,7 @@ class MatchStrategyTask(val exchangeManager: ExchangeManager) : Task {
                         totalGain += gain
                     }
 
-                    if (totalGain > maxGain && bestOversold < bestOversold) {
+                    if (totalGain > maxGain) {
                         maxGain = totalGain
                         bestOverbought = overbought
                         bestOversold = oversold
@@ -77,6 +81,11 @@ class MatchStrategyTask(val exchangeManager: ExchangeManager) : Task {
         val exitRule = UnderIndicatorRule(shortSma, longSma) // Trend
                 .and(CrossedUpIndicatorRule(rsi, overbought)) // Signal 1
                 .and(UnderIndicatorRule(shortSma, closePrice)) // Signal 2
+
+
+//        val entryRule = OverIndicatorRule(rsi, oversold)
+//
+//        val exitRule = UnderIndicatorRule(rsi, overbought)
 
         return BaseStrategy(entryRule, exitRule)
     }

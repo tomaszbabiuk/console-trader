@@ -6,15 +6,15 @@ import org.consoletrader.common.ExchangeManager
 
 abstract class MacdConditionFactory : ConditionFactory {
     override fun create(paramsRaw: String): Condition {
-        val params = PairOnlyExtendedParams(paramsRaw)
+        val params = PairExtendedParams(paramsRaw)
         return create(params)
     }
 
-    abstract fun create(params: PairOnlyExtendedParams): Condition
+    abstract fun create(params: PairExtendedParams): Condition
 }
 
 class MacdCrossUpConditionFactory(val exchangeManager: ExchangeManager) : MacdConditionFactory() {
-    override fun create(params: PairOnlyExtendedParams): Condition {
+    override fun create(params: PairExtendedParams): Condition {
         return MacdCrossUpCondition(exchangeManager, params)
     }
 
@@ -24,7 +24,7 @@ class MacdCrossUpConditionFactory(val exchangeManager: ExchangeManager) : MacdCo
 }
 
 class MacdCrossDownConditionFactory(val exchangeManager: ExchangeManager) : MacdConditionFactory() {
-    override fun create(params: PairOnlyExtendedParams): Condition {
+    override fun create(params: PairExtendedParams): Condition {
         return MacdCrossDownCondition(exchangeManager, params)
     }
 

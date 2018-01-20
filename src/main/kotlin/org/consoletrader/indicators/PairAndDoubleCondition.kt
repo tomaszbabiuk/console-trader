@@ -12,6 +12,7 @@ abstract class PairAndDoubleCondition(exchangeManager: ExchangeManager, val para
     override fun buildEvaluator(): Single<EvaluationResult> {
         return dataSource
                 .createSingle()
+                .map { it.series }
                 .map(this::mapper)
                 .onErrorResumeNext { throwable -> Single.just(EvaluationResult(false, "Exception: $throwable")) }
     }

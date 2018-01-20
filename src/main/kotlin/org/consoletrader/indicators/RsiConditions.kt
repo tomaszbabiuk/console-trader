@@ -15,9 +15,9 @@ class RsiAboveCondition(exchangeManager: ExchangeManager, params: PairAndDoubleE
         val rsi = rsiIndicator.getValue(series.tickCount - 1)
         val passed = rsi.toDouble() > params.value
         val comment = if (passed) {
-            "[TRUE] RSI of ${params.currencyPair}=$rsi > ${params.value}"
+            "[TRUE] RSI of ${params.currencyPair}: $rsi > ${params.value}"
         } else {
-            "[FALSE] RSI of ${params.currencyPair}=$rsi < ${params.value}"
+            "[FALSE] RSI of ${params.currencyPair}: $rsi > ${params.value}"
         }
         return EvaluationResult(passed, comment)
     }
@@ -34,7 +34,7 @@ class RsiBelowCondition(exchangeManager: ExchangeManager, params: PairAndDoubleE
         val comment = if (passed) {
             "[TRUE] RSI of ${params.currencyPair}: $rsi < ${params.value}"
         } else {
-            "[FALSE] RSI of ${params.currencyPair}: $rsi > ${params.value}"
+            "[FALSE] RSI of ${params.currencyPair}: $rsi < ${params.value}"
         }
         return EvaluationResult(passed, comment)
     }

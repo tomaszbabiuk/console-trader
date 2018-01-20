@@ -43,6 +43,7 @@ fun main(args: Array<String>) {
     allTasks += MarketSellTask(exchangeManager)
     allTasks += MatchStrategyTask(exchangeManager)
     allTasks += PushoverNotificationTask(exchangeManager)
+    allTasks += AnalyseTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 

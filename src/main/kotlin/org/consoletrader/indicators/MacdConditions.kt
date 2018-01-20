@@ -9,12 +9,13 @@ import org.ta4j.core.indicators.EMAIndicator
 import org.ta4j.core.indicators.MACDIndicator
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator
 
-abstract class MacdCondition(exchangeManager: ExchangeManager, val params: PairOnlyExtendedParams) : Condition {
+abstract class MacdCondition(exchangeManager: ExchangeManager, val params: PairExtendedParams) : Condition {
     private val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
 
     override fun buildEvaluator(): Single<EvaluationResult> {
         return dataSource
                 .createSingle()
+                .map { it.series }
                 .map(this::mapper)
                 .onErrorResumeNext { throwable -> Single.just(EvaluationResult(false, "Exception: $throwable")) }
     }
@@ -22,7 +23,7 @@ abstract class MacdCondition(exchangeManager: ExchangeManager, val params: PairO
     abstract fun mapper(series: TimeSeries): EvaluationResult
 }
 
-class MacdCrossUpCondition(exchangeManager: ExchangeManager, params: PairOnlyExtendedParams) :
+class MacdCrossUpCondition(exchangeManager: ExchangeManager, params: PairExtendedParams) :
         MacdCondition(exchangeManager, params) {
 
     override fun mapper(series: TimeSeries): EvaluationResult {
@@ -45,7 +46,7 @@ class MacdCrossUpCondition(exchangeManager: ExchangeManager, params: PairOnlyExt
     }
 }
 
-class MacdCrossDownCondition(exchangeManager: ExchangeManager, params: PairOnlyExtendedParams) :
+class MacdCrossDownCondition(exchangeManager: ExchangeManager, params: PairExtendedParams) :
         MacdCondition(exchangeManager, params) {
 
     override fun mapper(series: TimeSeries): EvaluationResult {

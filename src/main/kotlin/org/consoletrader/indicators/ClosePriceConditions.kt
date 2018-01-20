@@ -13,9 +13,9 @@ class ClosePriceAboveCondition(exchangeManager: ExchangeManager, params: PairAnd
         val closePrice = closePriceIndicator.getValue(series.tickCount - 1).toDouble()
         val passed = closePrice > params.value
         val comment = if (passed) {
-            "[TRUE] Close price of ${params.currencyPair}=$closePrice > ${params.value}"
+            "[TRUE] Close price of ${params.currencyPair}: $closePrice > ${params.value}"
         } else {
-            "[FALSE] Close prive of ${params.currencyPair}=$closePrice < ${params.value}"
+            "[FALSE] Close price of ${params.currencyPair}: $closePrice > ${params.value}"
         }
         return EvaluationResult(passed, comment)
     }
@@ -29,9 +29,9 @@ class ClosePriceBelowCondition(exchangeManager: ExchangeManager, params: PairAnd
         val closePrice = closePriceIndicator.getValue(series.tickCount - 1).toDouble()
         val passed = closePrice < params.value
         val comment = if (passed) {
-            "[TRUE] Close price of ${params.currencyPair}=$closePrice < ${params.value}"
+            "[TRUE] Close price of ${params.currencyPair}: $closePrice < ${params.value}"
         } else {
-            "[FALSE] Close prive of ${params.currencyPair}=$closePrice > ${params.value}"
+            "[FALSE] Close price of ${params.currencyPair}: $closePrice < ${params.value}"
         }
         return EvaluationResult(passed, comment)
     }
