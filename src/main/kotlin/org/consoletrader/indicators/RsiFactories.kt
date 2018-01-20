@@ -3,7 +3,7 @@ package org.consoletrader.indicators
 import org.consoletrader.common.Condition
 import org.consoletrader.common.ExchangeManager
 
-class RsiAboveConditionConditionFactory(val exchangeManager: ExchangeManager) : PairAndDoubleConditionFactory() {
+class RsiAboveConditionFactory(val exchangeManager: ExchangeManager) : PairAndDoubleConditionFactory() {
     override fun create(params: PairAndDoubleExtendedParams): Condition {
         return RsiAboveCondition(exchangeManager, params)
     }
@@ -13,7 +13,7 @@ class RsiAboveConditionConditionFactory(val exchangeManager: ExchangeManager) : 
     }
 }
 
-class RsiBelowConditionConditionFactory(val exchangeManager: ExchangeManager) : PairAndDoubleConditionFactory() {
+class RsiBelowConditionFactory(val exchangeManager: ExchangeManager) : PairAndDoubleConditionFactory() {
     override fun create(params: PairAndDoubleExtendedParams): Condition {
         return RsiBelowCondition(exchangeManager, params)
     }
