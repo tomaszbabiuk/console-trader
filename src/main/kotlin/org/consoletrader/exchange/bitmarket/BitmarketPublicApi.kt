@@ -1,4 +1,4 @@
-package org.consoletrader.candles.bitmarket
+package org.consoletrader.exchange.bitmarket
 
 import io.reactivex.Single
 import retrofit2.http.GET

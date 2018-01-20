@@ -1,7 +1,6 @@
 package org.consoletrader.notifications.pushover
 
 import okhttp3.OkHttpClient
-import org.consoletrader.candles.bitfinex.BitfinexPublicAPI
 import org.consoletrader.notifications.NotificationsSender
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

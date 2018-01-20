@@ -1,4 +1,4 @@
-package org.consoletrader.candles.binance
+package org.consoletrader.exchange.binance
 
 import io.reactivex.Observable
 import retrofit2.http.GET

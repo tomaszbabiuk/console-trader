@@ -2,11 +2,15 @@ package org.consoletrader
 
 import io.reactivex.functions.Action
 import org.consoletrader.common.*
+import org.consoletrader.exchange.ExchangeMatcher
 import org.consoletrader.indicators.*
 import org.consoletrader.marketcap.*
 import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
+import org.consoletrader.strategy.BuyingStrategyTask
+import org.consoletrader.strategy.MatchStrategyTask
+import org.consoletrader.strategy.SellingStrategyTask
 import org.consoletrader.wallet.WalletTask
 
 
@@ -43,7 +47,8 @@ fun main(args: Array<String>) {
     allTasks += MarketSellTask(exchangeManager)
     allTasks += MatchStrategyTask(exchangeManager)
     allTasks += PushoverNotificationTask(exchangeManager)
-    allTasks += AnalyseTask(exchangeManager)
+    allTasks += BuyingStrategyTask(exchangeManager)
+    allTasks += SellingStrategyTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 

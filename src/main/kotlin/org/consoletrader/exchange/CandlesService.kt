@@ -1,4 +1,4 @@
-package org.consoletrader.candles
+package org.consoletrader.exchange
 
 import io.reactivex.Single
 import org.knowm.xchange.currency.CurrencyPair

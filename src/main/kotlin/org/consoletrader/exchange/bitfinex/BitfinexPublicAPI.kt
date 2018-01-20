@@ -1,4 +1,4 @@
-package org.consoletrader.candles.bitfinex
+package org.consoletrader.exchange.bitfinex
 
 import io.reactivex.Observable
 import retrofit2.http.GET
