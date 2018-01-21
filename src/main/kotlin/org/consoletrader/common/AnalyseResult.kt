@@ -67,7 +67,7 @@ class AnalyseResult(indicatorsData: IndicatorsData) {
             Current RSI: $currentRsi
             Best oversold RSI: $bestOversoldRsi
             Best overbought RSI: $bestOverboughtRsi
-            Max gain: ${calculateGain()}
+            Short gain: ${calculateGain()}
             Short ATH loss: ${calculateAthLoss()}
 """.trimIndent()
     }
