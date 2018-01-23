@@ -3,6 +3,7 @@ package org.consoletrader.indicators
 import org.consoletrader.common.Condition
 import org.consoletrader.common.ConditionFactory
 import org.consoletrader.common.ExchangeManager
+import org.consoletrader.common.PairAndDoubleExtendedParams
 
 class BestOversoldRsiConditionFactory(val exchangeManager: ExchangeManager) : ConditionFactory {
     override fun create(paramsRaw: String): Condition {

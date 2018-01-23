@@ -3,7 +3,7 @@ package org.consoletrader.strategy
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
 import org.consoletrader.indicators.IndicatorsDataSource
-import org.consoletrader.indicators.PairExtendedParams
+import org.consoletrader.common.PairExtendedParams
 import org.ta4j.core.*
 import org.ta4j.core.trading.rules.CrossedUpIndicatorRule
 import org.ta4j.core.trading.rules.CrossedDownIndicatorRule

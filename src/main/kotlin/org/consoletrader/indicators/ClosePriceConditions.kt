@@ -2,6 +2,7 @@ package org.consoletrader.indicators
 
 import org.consoletrader.common.EvaluationResult
 import org.consoletrader.common.ExchangeManager
+import org.consoletrader.common.PairAndDoubleExtendedParams
 import org.ta4j.core.TimeSeries
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator
 

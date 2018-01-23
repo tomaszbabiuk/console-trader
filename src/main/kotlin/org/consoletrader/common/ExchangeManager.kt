@@ -21,4 +21,6 @@ abstract class ExchangeManager(spec: ExchangeSpecification,
         }
 
     abstract fun getLatestTradeHistory(pair: CurrencyPair): UserTrades
+
+    abstract fun getMaximumTradeHistory(pair: CurrencyPair): UserTrades
 }

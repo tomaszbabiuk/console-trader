@@ -1,4 +1,4 @@
-package org.consoletrader.indicators
+package org.consoletrader.common
 
 import org.consoletrader.common.ParsingParameterException
 import org.consoletrader.common.ExtendedParams

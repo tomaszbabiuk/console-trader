@@ -1,10 +1,7 @@
 package org.consoletrader.indicators
 
 import io.reactivex.Single
-import org.consoletrader.common.AnalyseResult
-import org.consoletrader.common.Condition
-import org.consoletrader.common.EvaluationResult
-import org.consoletrader.common.ExchangeManager
+import org.consoletrader.common.*
 import org.ta4j.core.TimeSeries
 
 abstract class BestRsiConditionBase(exchangeManager: ExchangeManager, params: PairAndDoubleExtendedParams) :

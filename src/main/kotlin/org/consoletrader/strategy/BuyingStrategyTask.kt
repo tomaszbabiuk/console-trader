@@ -5,7 +5,7 @@ import org.consoletrader.common.AnalyseResult
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
 import org.consoletrader.indicators.IndicatorsDataSource
-import org.consoletrader.indicators.PairsExtendedParams
+import org.consoletrader.common.PairsExtendedParams
 
 class BuyingStrategyTask(val exchangeManager: ExchangeManager) : Task {
     override fun match(paramsRaw: String): Boolean {

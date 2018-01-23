@@ -12,7 +12,15 @@ class BitfinexExchangeManager(apiKey: String, apiSecret: String) :
 
     override fun getLatestTradeHistory(pair: CurrencyPair): UserTrades {
         val millis = Calendar.getInstance().timeInMillis - 24 * 60 * 60 * 1000
-        val startDate = Date(millis)
+        return getTradeHistory(pair, millis)
+    }
+
+    override fun getMaximumTradeHistory(pair: CurrencyPair): UserTrades {
+        return getTradeHistory(pair, 0)
+    }
+
+    private fun getTradeHistory(pair: CurrencyPair, timestamp: Long): UserTrades {
+        val startDate = Date(timestamp)
         val tradeParams = BitfinexTradeService.BitfinexTradeHistoryParams(startDate, 30, pair)
         return exchange.tradeService.getTradeHistory(tradeParams)
     }

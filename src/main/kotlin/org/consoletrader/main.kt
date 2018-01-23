@@ -8,6 +8,7 @@ import org.consoletrader.marketcap.*
 import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
+import org.consoletrader.profit.CalculateStopPriceTask
 import org.consoletrader.strategy.BuyingStrategyTask
 import org.consoletrader.strategy.MatchStrategyTask
 import org.consoletrader.strategy.SellingStrategyTask
@@ -51,6 +52,7 @@ fun main(args: Array<String>) {
     allTasks += PushoverNotificationTask(exchangeManager)
     allTasks += BuyingStrategyTask(exchangeManager)
     allTasks += SellingStrategyTask(exchangeManager)
+    allTasks += CalculateStopPriceTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 

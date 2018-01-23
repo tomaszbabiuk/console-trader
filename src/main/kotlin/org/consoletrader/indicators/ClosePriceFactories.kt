@@ -2,6 +2,7 @@ package org.consoletrader.indicators
 
 import org.consoletrader.common.Condition
 import org.consoletrader.common.ExchangeManager
+import org.consoletrader.common.PairAndDoubleExtendedParams
 
 class ClosePriceAboveConditionFactory(val exchangeManager: ExchangeManager) : PairAndDoubleConditionFactory() {
     override fun create(params: PairAndDoubleExtendedParams): Condition {
