@@ -1,10 +1,14 @@
 package org.consoletrader.profit
 
-import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.functions.Function3
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.PairAndDoubleExtendedParams
 import org.consoletrader.common.Task
 import org.knowm.xchange.dto.Order
+import org.knowm.xchange.dto.account.Balance
+import org.knowm.xchange.dto.marketdata.Ticker
+import org.knowm.xchange.dto.trade.UserTrades
 
 data class Profit(val averageBuyingPrice: Double, val currentPrice: Double, val returnOfInvestment: Double)
 
@@ -15,35 +19,25 @@ class CalculateStopPriceTask(val exchangeManager: ExchangeManager) : Task {
         return paramsRaw.startsWith("calculatestop")
     }
 
-    override fun execute(paramsRaw: String) {
-        val params = PairAndDoubleExtendedParams(paramsRaw)
-        var currentAmount = 0.0
-        var marketPrice = 0.0
-        var iteratedCost = 0.0
-        var amountLeft = 0.0
-        Observable
-                .just(accountService.accountInfo.wallet.getBalance(params.currencyPair.base))
-                .doOnNext {
-                    currentAmount = it.total.toDouble()
-                    if (params.value < currentAmount) {
-                        currentAmount = params.value
-                    }
+    private var params: PairAndDoubleExtendedParams? = null
 
-                    amountLeft = currentAmount
-                }
-                .map { exchangeManager.exchange.marketDataService.getTicker(params.currencyPair) }
-                .doOnNext {
-                    marketPrice = it.last.toDouble()
-                }
-                .flatMapIterable {
-                    exchangeManager.getMaximumTradeHistory(params.currencyPair).userTrades.reversed()
-                }
+    private fun calculateProfitFromLastTrades(balance: Balance, ticker: Ticker, trades: UserTrades): Profit {
+        var iteratedCost = 0.0
+
+        var currentAmount = balance.total.toDouble()
+        if (params!!.value < currentAmount) {
+            currentAmount = params!!.value
+        }
+
+        var amountLeft = currentAmount
+
+        trades
+                .userTrades
+                .reversed()
                 .filter { it.type == Order.OrderType.BID }
-                .takeUntil {
-                    amountLeft == 0.0
-                }
-                .doOnNext {
-                    val feeCurrency = if (it.feeCurrency == params.currencyPair.base) {
+                .takeWhile { amountLeft != 0.0 }
+                .forEach {
+                    val feeCurrency = if (it.feeCurrency == params!!.currencyPair.base) {
                         it.feeAmount.toDouble()
                     } else {
                         0.0
@@ -62,15 +56,29 @@ class CalculateStopPriceTask(val exchangeManager: ExchangeManager) : Task {
                         }
                     }
                 }
-                .doOnComplete {
-                    val averagePrice = iteratedCost / currentAmount
-                    val roi = 100 - averagePrice / marketPrice * 100
-                    println("Average buying price is: $averagePrice")
-                    println("Current price is: $marketPrice")
-                    println("Return of investment is: $roi%")
-                }
-                .blockingSubscribe {
+
+        val marketPrice = ticker.last.toDouble()
+        val averagePrice = iteratedCost / currentAmount
+        val roi = 100 - averagePrice / marketPrice * 100
+        return Profit(averagePrice, marketPrice, roi)
+    }
+
+    override fun execute(paramsRaw: String) {
+        params = PairAndDoubleExtendedParams(paramsRaw)
+
+        val currencyPair = params!!.currencyPair
+        val walletObservable = Single.just(accountService.accountInfo.wallet.getBalance(currencyPair.base))
+        val tickerObservable = Single.just(exchangeManager.exchange.marketDataService.getTicker(currencyPair))
+        val tradesObservable = Single.just(exchangeManager.getMaximumTradeHistory(currencyPair))
+
+        Single.zip(
+                walletObservable,
+                tickerObservable,
+                tradesObservable,
+                Function3(this::calculateProfitFromLastTrades))
+                .doOnSuccess {
                     println(it)
                 }
+                .blockingGet()
     }
 }
