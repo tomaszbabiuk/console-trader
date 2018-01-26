@@ -25,12 +25,7 @@ class RsiAboveCondition(exchangeManager: ExchangeManager, params: PairAndDoubleE
 
     override fun mapper(rsi: Double): EvaluationResult {
         val passed = rsi > params.value
-        val comment = if (passed) {
-            "[TRUE] RSI of ${params.currencyPair}: $rsi > ${params.value}"
-        } else {
-            "[FALSE] RSI of ${params.currencyPair}: $rsi > ${params.value}"
-        }
-
+        val comment = "[${passed.toString().toUpperCase()}] RSI of ${params.currencyPair}: $rsi > ${params.value}"
         return EvaluationResult(passed, comment)
     }
 }
@@ -40,11 +35,7 @@ class RsiBelowCondition(exchangeManager: ExchangeManager, params: PairAndDoubleE
 
     override fun mapper(rsi: Double): EvaluationResult {
         val passed = rsi < params.value
-        val comment = if (passed) {
-            "[TRUE] RSI of ${params.currencyPair}: $rsi < ${params.value}"
-        } else {
-            "[FALSE] RSI of ${params.currencyPair}: $rsi < ${params.value}"
-        }
+        val comment = "[${passed.toString().toUpperCase()}] RSI of ${params.currencyPair}: $rsi < ${params.value}"
         return EvaluationResult(passed, comment)
     }
 }

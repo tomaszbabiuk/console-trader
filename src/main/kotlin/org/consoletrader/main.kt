@@ -9,6 +9,7 @@ import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.profit.CalculateStopPriceTask
+import org.consoletrader.profit.ProfitConditionFactory
 import org.consoletrader.strategy.BuyingStrategyTask
 import org.consoletrader.strategy.MatchStrategyTask
 import org.consoletrader.strategy.SellingStrategyTask
@@ -43,6 +44,7 @@ fun main(args: Array<String>) {
     allConditionFactories.add(ClosePriceBelowConditionFactory(exchangeManager))
     allConditionFactories.add(BestOversoldRsiConditionFactory(exchangeManager))
     allConditionFactories.add(BestOverboughtRsiConditionFactory(exchangeManager))
+    allConditionFactories.add(ProfitConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
     allTasks += WalletTask(exchangeManager)
