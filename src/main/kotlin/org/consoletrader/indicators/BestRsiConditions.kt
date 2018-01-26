@@ -20,12 +20,8 @@ class BestOverboughtRsiCondition(exchangeManager: ExchangeManager, params: PairA
         BestRsiConditionBase(exchangeManager, params) {
 
     override fun mapper(analyseResult: AnalyseResult): EvaluationResult {
-        val passed = analyseResult.currentRsi  > analyseResult.bestOverboughtRsi - params.value
-        val comment = if (passed) {
-            "[TRUE] best overbought RSI of ${params.currencyPair}: ${analyseResult.bestOverboughtRsi} > ${analyseResult.currentRsi} - ${params.value}"
-        } else {
-            "[FALSE] best overbought RSI of ${params.currencyPair}: ${analyseResult.bestOverboughtRsi} > ${analyseResult.currentRsi} - ${params.value}"
-        }
+        val passed = analyseResult.currentRsi > analyseResult.bestOverboughtRsi - params.value
+        val comment = "[${passed.toString().toUpperCase()}] best overbought RSI of ${params.currencyPair}: ${analyseResult.bestOverboughtRsi} > ${analyseResult.currentRsi} - ${params.value}"
 
         return EvaluationResult(passed, comment)
     }
