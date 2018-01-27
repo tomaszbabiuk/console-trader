@@ -26,7 +26,7 @@ class AnalyseResult(indicatorsData: IndicatorsData) {
         currentRsi = rsiIndicator.getValue(series.tickCount - 1).toDouble()
         var minRsi = currentRsi
         var maxRsi = currentRsi
-        for (i in 0 until series.tickCount) {
+        for (i in 14 until series.tickCount) {
             val xPrice = closePriceIndicator.getValue(i).toDouble()
             if (xPrice < minClosePrice) {
                 minClosePrice = xPrice

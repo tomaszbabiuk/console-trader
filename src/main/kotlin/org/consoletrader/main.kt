@@ -12,6 +12,8 @@ import org.consoletrader.profit.CalculateStopPriceTask
 import org.consoletrader.profit.ProfitConditionFactory
 import org.consoletrader.analyse.AnalyseTask
 import org.consoletrader.strategy.MatchStrategyTask
+import org.consoletrader.wallet.BalanceBelowConditionFactory
+import org.consoletrader.wallet.BalanceAboveConditionFactory
 import org.consoletrader.wallet.WalletTask
 
 
@@ -44,6 +46,8 @@ fun main(args: Array<String>) {
     allConditionFactories.add(BestOversoldRsiConditionFactory(exchangeManager))
     allConditionFactories.add(BestOverboughtRsiConditionFactory(exchangeManager))
     allConditionFactories.add(ProfitConditionFactory(exchangeManager))
+    allConditionFactories.add(BalanceAboveConditionFactory(exchangeManager))
+    allConditionFactories.add(BalanceBelowConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
     allTasks += WalletTask(exchangeManager)
