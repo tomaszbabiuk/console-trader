@@ -19,15 +19,6 @@ import org.knowm.xchange.currency.CurrencyPair
 
 
 fun main(args: Array<String>) {
-
-    KuCoinCandleService()
-            .getCandles(CurrencyPair("KCS", "BTC"))
-            .doOnSuccess { println(it) }
-            .blockingGet()
-
-
-
-
     val exchangeName = checkArgument(args, "exchange", "Exchange not defined. Allowed markets: binance, bitfinex")
     val apiKey = checkArgument(args, "key", "API key not defined")
     val apiSecret = checkArgument(args, "secret", "Api secret not defined")
