@@ -66,7 +66,7 @@ fun main(args: Array<String>) {
         if (conditions.isEmpty()) {
             taskToExecute.execute(taskRaw)
         } else {
-            LoopExecutor(conditions, Action{
+            InstantExecutor(conditions, Action {
                 taskToExecute.execute(taskRaw)
             }).execute()
         }
