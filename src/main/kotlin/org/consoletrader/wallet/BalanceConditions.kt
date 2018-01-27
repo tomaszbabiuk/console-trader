@@ -17,10 +17,8 @@ open class BalanceAboveCondition(exchangeManager: ExchangeManager, val params: C
                 .toList()
                 .flatMap {
                     if (it.size == 1) {
-                        val balance = it[0].amount
-                        val passed = check(balance)
-                        val comment = "[${passed.toString().toUpperCase()}] Wallet balance of ${params.currency}: ${balance} > ${params.value}"
-                        val result = EvaluationResult(passed, comment)
+                        val amount = it[0].amount
+                        val result = buildEvaluationResult(amount)
                         Single.just(result)
                     } else {
                         val result = EvaluationResult(false, "[FALSE} There's no record about ${params.currency} on the wallet")
@@ -29,13 +27,17 @@ open class BalanceAboveCondition(exchangeManager: ExchangeManager, val params: C
                 }
     }
 
-    protected open fun check(balance:Double) : Boolean {
-        return  balance >= params.value
+    protected open fun buildEvaluationResult(amount: Double): EvaluationResult {
+        val passed = amount >= params.value
+        val comment = "[${passed.toString().toUpperCase()}] Balance of ${params.currency}: ${amount} > ${params.value}"
+        return EvaluationResult(passed, comment)
     }
 }
 
-class BalanceBelowCondition(exchangeManager: ExchangeManager, params: CurrencyAndValueExtendedParams) : BalanceAboveCondition(exchangeManager, params) {
-    override fun check(balance: Double): Boolean {
-        return balance <= params.value
+class MaxBalanceCondition(exchangeManager: ExchangeManager, params: CurrencyAndValueExtendedParams) : BalanceAboveCondition(exchangeManager, params) {
+    override fun buildEvaluationResult(amount: Double): EvaluationResult {
+        val passed = amount <= params.value
+        val comment = "[${passed.toString().toUpperCase()}] Wallet balance of ${params.currency}: ${amount} < ${params.value}"
+        return EvaluationResult(passed, comment)
     }
 }

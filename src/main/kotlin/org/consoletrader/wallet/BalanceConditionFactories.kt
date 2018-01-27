@@ -18,7 +18,7 @@ class BalanceAboveConditionFactory(val exchangeManager: ExchangeManager) : Condi
 class BalanceBelowConditionFactory(val exchangeManager: ExchangeManager) : ConditionFactory {
     override fun create(paramsRaw: String): Condition {
         val params = CurrencyAndValueExtendedParams(paramsRaw)
-        return BalanceBelowCondition(exchangeManager, params)
+        return MaxBalanceCondition(exchangeManager, params)
     }
 
     override fun match(paramsRaw: String): Boolean {

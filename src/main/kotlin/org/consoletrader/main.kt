@@ -97,11 +97,17 @@ fun buildConditions(args: Array<String>, factories: ArrayList<ConditionFactory>)
             .filter { it.startsWith("-when:") }
             .forEach { argumentRaw: String ->
                 val paramsRaw = argumentRaw.substringAfter(':')
+                var conditionMatched = false
                 factories.forEach {
                     if (it.match(paramsRaw)) {
                         val factory = it.create(paramsRaw)
                         result.add(factory)
+                        conditionMatched = true
                     }
+                }
+
+                if (!conditionMatched) {
+                    println("WARNING: unknown argument $argumentRaw - ignoring")
                 }
             }
 
