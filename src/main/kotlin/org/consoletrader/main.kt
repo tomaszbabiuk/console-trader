@@ -3,7 +3,6 @@ package org.consoletrader
 import io.reactivex.functions.Action
 import org.consoletrader.common.*
 import org.consoletrader.exchange.ExchangeMatcher
-import org.consoletrader.exchange.kucoin.KuCoinCandleService
 import org.consoletrader.indicators.*
 import org.consoletrader.marketcap.*
 import org.consoletrader.notifications.pushover.PushoverNotificationTask
@@ -11,11 +10,9 @@ import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.profit.CalculateStopPriceTask
 import org.consoletrader.profit.ProfitConditionFactory
-import org.consoletrader.strategy.BuyingStrategyTask
+import org.consoletrader.analyse.AnalyseTask
 import org.consoletrader.strategy.MatchStrategyTask
-import org.consoletrader.strategy.SellingStrategyTask
 import org.consoletrader.wallet.WalletTask
-import org.knowm.xchange.currency.CurrencyPair
 
 
 fun main(args: Array<String>) {
@@ -54,8 +51,7 @@ fun main(args: Array<String>) {
     allTasks += MarketSellTask(exchangeManager)
     allTasks += MatchStrategyTask(exchangeManager)
     allTasks += PushoverNotificationTask(exchangeManager)
-    allTasks += BuyingStrategyTask(exchangeManager)
-    allTasks += SellingStrategyTask(exchangeManager)
+    allTasks += AnalyseTask(exchangeManager)
     allTasks += CalculateStopPriceTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
@@ -69,6 +65,7 @@ fun main(args: Array<String>) {
             taskToExecute.execute(taskRaw)
         } else {
             InstantExecutor(conditions, Action {
+                println("Executing task:")
                 taskToExecute.execute(taskRaw)
             }).execute()
         }

@@ -1,4 +1,4 @@
-package org.consoletrader.strategy
+package org.consoletrader.analyse
 
 import io.reactivex.Observable
 import org.consoletrader.common.AnalyseResult
@@ -7,7 +7,7 @@ import org.consoletrader.common.Task
 import org.consoletrader.indicators.IndicatorsDataSource
 import org.consoletrader.common.PairsExtendedParams
 
-class BuyingStrategyTask(val exchangeManager: ExchangeManager) : Task {
+class AnalyseTask(val exchangeManager: ExchangeManager) : Task {
     override fun match(paramsRaw: String): Boolean {
         return paramsRaw.startsWith("analyse")
     }
@@ -25,9 +25,8 @@ class BuyingStrategyTask(val exchangeManager: ExchangeManager) : Task {
                 .map {
                     AnalyseResult(it)
                 }
-                .subscribe {
+                .blockingSubscribe {
                     println(it)
-                    println()
                 }
     }
 }

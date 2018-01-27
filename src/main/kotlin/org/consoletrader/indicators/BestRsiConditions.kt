@@ -20,8 +20,8 @@ class BestOverboughtRsiCondition(exchangeManager: ExchangeManager, params: PairA
         BestRsiConditionBase(exchangeManager, params) {
 
     override fun mapper(analyseResult: AnalyseResult): EvaluationResult {
-        val passed = analyseResult.currentRsi > analyseResult.bestOverboughtRsi - params.value
-        val comment = "[${passed.toString().toUpperCase()}] best overbought RSI of ${params.currencyPair}: ${analyseResult.bestOverboughtRsi} > ${analyseResult.currentRsi} - ${params.value}"
+        val passed = analyseResult.currentRsi > analyseResult.bestOverboughtRsi + params.value
+        val comment = "[${passed.toString().toUpperCase()}] best overbought RSI of ${params.currencyPair}: ${analyseResult.currentRsi} > ${analyseResult.bestOverboughtRsi} + ${params.value}"
 
         return EvaluationResult(passed, comment)
     }
@@ -47,11 +47,11 @@ class BestOversoldRsiCondition(val exchangeManager: ExchangeManager, val params:
     private fun mapToEvaluationResult(analyseResult: AnalyseResult): EvaluationResult {
         val gainPassed = analyseResult.calculateGain() > params.minShortGain
         val athLossPassed = analyseResult.calculateAthLoss() > params.minAthLoss
-        val rsiPassed = analyseResult.currentRsi < analyseResult.bestOversoldRsi + params.rsiAdvance
+        val rsiPassed = analyseResult.currentRsi < analyseResult.bestOversoldRsi - params.rsiAdvance
         val rising = analyseResult.currentRsi > analyseResult.bestOversoldRsi
         val passed = gainPassed && athLossPassed && rsiPassed && rising
         val comment = StringBuilder()
-        comment.appendln("[${rsiPassed.toString().toUpperCase()}] best oversold RSI: ${analyseResult.currentRsi} < ${analyseResult.bestOversoldRsi} + ${params.rsiAdvance}")
+        comment.appendln("[${rsiPassed.toString().toUpperCase()}] best oversold RSI: ${analyseResult.currentRsi} < ${analyseResult.bestOversoldRsi} - ${params.rsiAdvance}")
         comment.appendln("[${gainPassed.toString().toUpperCase()}] min gain: ${analyseResult.calculateGain()} > ${params.minShortGain}")
         comment.appendln("[${athLossPassed.toString().toUpperCase()}] min ath loss: ${analyseResult.calculateAthLoss()} > ${params.minAthLoss}")
         comment.appendln("[${rising.toString().toUpperCase()}] rising: ${analyseResult.currentRsi} > ${analyseResult.bestOversoldRsi}")
