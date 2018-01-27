@@ -3,3 +3,5 @@
 *.sh
 target
 build
+cache
+consoletrader.jar
