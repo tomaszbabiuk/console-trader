@@ -11,10 +11,12 @@ import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.profit.CalculateStopPriceTask
 import org.consoletrader.profit.ProfitConditionFactory
 import org.consoletrader.analyse.AnalyseTask
+import org.consoletrader.bash.ExitTask
 import org.consoletrader.strategy.MatchStrategyTask
 import org.consoletrader.wallet.BalanceBelowConditionFactory
 import org.consoletrader.wallet.BalanceAboveConditionFactory
 import org.consoletrader.wallet.WalletTask
+import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
@@ -57,6 +59,7 @@ fun main(args: Array<String>) {
     allTasks += PushoverNotificationTask(exchangeManager)
     allTasks += AnalyseTask(exchangeManager)
     allTasks += CalculateStopPriceTask(exchangeManager)
+    allTasks += ExitTask()
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
@@ -69,8 +72,9 @@ fun main(args: Array<String>) {
             taskToExecute.execute(taskRaw)
         } else {
             InstantExecutor(conditions, Action {
-                println("Executing task:")
                 taskToExecute.execute(taskRaw)
+            }, Action {
+                exitProcess(1)
             }).execute()
         }
     }
