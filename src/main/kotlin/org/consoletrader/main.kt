@@ -1,6 +1,6 @@
 package org.consoletrader
 
-import io.reactivex.functions.Action
+
 import org.consoletrader.common.*
 import org.consoletrader.exchange.ExchangeMatcher
 import org.consoletrader.indicators.*
@@ -9,12 +9,10 @@ import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.profit.CalculateStopPriceTask
-import org.consoletrader.profit.ProfitConditionFactory
 import org.consoletrader.analyse.AnalyseTask
-import org.consoletrader.bash.ExitTask
+import org.consoletrader.profit.MinProfitTask
 import org.consoletrader.strategy.MatchStrategyTask
 import org.consoletrader.wallet.*
-import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
@@ -39,7 +37,6 @@ fun main(args: Array<String>) {
     allConditionFactories.add(MacdCrossDownConditionFactory(exchangeManager))
     allConditionFactories.add(ClosePriceAboveConditionFactory(exchangeManager))
     allConditionFactories.add(ClosePriceBelowConditionFactory(exchangeManager))
-    allConditionFactories.add(ProfitConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
     allTasks += WalletTask(exchangeManager)
@@ -55,7 +52,7 @@ fun main(args: Array<String>) {
     allTasks += BalanceBelowTask(exchangeManager)
     allTasks += BestOverboughtRsiTask(exchangeManager)
     allTasks += BestOversoldRsiTask(exchangeManager)
-    allTasks += ExitTask()
+    allTasks += MinProfitTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
@@ -80,29 +77,6 @@ fun checkArgument(args: Array<String>, parameter: String, message: String? = nul
     }
 
     return null
-}
-
-fun buildConditions(args: Array<String>, factories: ArrayList<ConditionFactory>): ArrayList<Condition> {
-    val result = ArrayList<Condition>()
-    args
-            .filter { it.startsWith("-when:") }
-            .forEach { argumentRaw: String ->
-                val paramsRaw = argumentRaw.substringAfter(':')
-                var conditionMatched = false
-                factories.forEach {
-                    if (it.match(paramsRaw)) {
-                        val factory = it.create(paramsRaw)
-                        result.add(factory)
-                        conditionMatched = true
-                    }
-                }
-
-                if (!conditionMatched) {
-                    println("WARNING: unknown argument $argumentRaw - ignoring")
-                }
-            }
-
-    return result
 }
 
 fun printUsage() {
@@ -137,5 +111,7 @@ fun printUsage() {
         -task:bestoversoldrsi([pair]|[rsi advance]|[min short gain]|[min loss]) - exits 0 if current rsi of specified pair is below best calculated overbought rsi value (plus "rsi advance" as a correction), otherwise exits 1
               you can also provide min short gain (in percent) and min loss (also in percent) in order to deepen the analysis
         -task:bestoverboughtrsi([pair]|[rsi advance]) - exits 0 if current rsi of specified pair is above best calculated oversold rsi value (minus "rsi advance" as correction), otherwise exits 1
+
+        -task:minprofit([pair]|[last buying amount to consider]|[return of investment threshold] - exits 0 if return of investment is above threshold, otherwise return 1
     """.trimIndent())
 }

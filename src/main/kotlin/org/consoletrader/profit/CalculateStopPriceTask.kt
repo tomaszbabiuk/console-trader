@@ -8,7 +8,7 @@ data class Profit(val averageBuyingPrice: Double, val currentPrice: Double, val 
 
 class CalculateStopPriceTask(val exchangeManager: ExchangeManager) : Task {
     override fun match(paramsRaw: String): Boolean {
-        return paramsRaw.startsWith("profit")
+        return paramsRaw.startsWith("calculatestop")
     }
 
     override fun execute(paramsRaw: String) {
