@@ -35,8 +35,6 @@ fun main(args: Array<String>) {
     val allConditionFactories = ArrayList<ConditionFactory>()
     allConditionFactories.add(MacdCrossUpConditionFactory(exchangeManager))
     allConditionFactories.add(MacdCrossDownConditionFactory(exchangeManager))
-    allConditionFactories.add(ClosePriceAboveConditionFactory(exchangeManager))
-    allConditionFactories.add(ClosePriceBelowConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
     allTasks += WalletTask(exchangeManager)
@@ -53,6 +51,8 @@ fun main(args: Array<String>) {
     allTasks += BestOverboughtRsiTask(exchangeManager)
     allTasks += BestOversoldRsiTask(exchangeManager)
     allTasks += MinProfitTask(exchangeManager)
+    allTasks += ClosePriceAboveTask(exchangeManager)
+    allTasks += ClosePriceBelowTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
