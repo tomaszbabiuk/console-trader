@@ -39,8 +39,6 @@ fun main(args: Array<String>) {
     allConditionFactories.add(MacdCrossDownConditionFactory(exchangeManager))
     allConditionFactories.add(ClosePriceAboveConditionFactory(exchangeManager))
     allConditionFactories.add(ClosePriceBelowConditionFactory(exchangeManager))
-    allConditionFactories.add(BestOversoldRsiConditionFactory(exchangeManager))
-    allConditionFactories.add(BestOverboughtRsiConditionFactory(exchangeManager))
     allConditionFactories.add(ProfitConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
@@ -55,6 +53,8 @@ fun main(args: Array<String>) {
     allTasks += MarketCapBelowTask()
     allTasks += BalanceAboveTask(exchangeManager)
     allTasks += BalanceBelowTask(exchangeManager)
+    allTasks += BestOverboughtRsiTask(exchangeManager)
+    allTasks += BestOversoldRsiTask(exchangeManager)
     allTasks += ExitTask()
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
@@ -63,16 +63,7 @@ fun main(args: Array<String>) {
         println("Unknown task!")
         printUsage()
     } else {
-        val conditions = buildConditions(args, allConditionFactories)
-        if (conditions.isEmpty()) {
-            taskToExecute.execute(taskRaw)
-        } else {
-            InstantExecutor(conditions, Action {
-                taskToExecute.execute(taskRaw)
-            }, Action {
-                exitProcess(1)
-            }).execute()
-        }
+        taskToExecute.execute(taskRaw)
     }
 }
 
@@ -140,8 +131,11 @@ fun printUsage() {
         -task:marketcapabove([pair]|[threshold]) - exits 0 if market cap value is above threshold, otherwise exits 1
         -task:marketcapabelow([pair]|[threshold]) - exits 0 if market cap value is below threshold, otherwise exits 1
 
-        -task:balanceabove([currency]|[threshold]) - exits 0 it balance of specified currency is above threshold, otherwise exits 1
-        -task:balanceabelow([currency]|[threshold]) - exits 0 it balance of specified currency is below threshold, otherwise exits 1
+        -task:balanceabove([currency]|[threshold]) - exits 0 if balance of specified currency is above threshold, otherwise exits 1
+        -task:balanceabelow([currency]|[threshold]) - exits 0 if balance of specified currency is below threshold, otherwise exits 1
 
+        -task:bestoversoldrsi([pair]|[rsi advance]|[min short gain]|[min loss]) - exits 0 if current rsi of specified pair is below best calculated overbought rsi value (plus "rsi advance" as a correction), otherwise exits 1
+              you can also provide min short gain (in percent) and min loss (also in percent) in order to deepen the analysis
+        -task:bestoverboughtrsi([pair]|[rsi advance]) - exits 0 if current rsi of specified pair is above best calculated oversold rsi value (minus "rsi advance" as correction), otherwise exits 1
     """.trimIndent())
 }

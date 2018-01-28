@@ -6,9 +6,9 @@ import org.knowm.xchange.currency.CurrencyPair
 
 open class BestOversoldRsiExtendedParams(taskRaw: String) : ExtendedParams() {
     val currencyPair: CurrencyPair
+    val rsiAdvance: Double
     val minShortGain: Double
     val minAthLoss: Double
-    val rsiAdvance: Double
 
     init {
         try {
