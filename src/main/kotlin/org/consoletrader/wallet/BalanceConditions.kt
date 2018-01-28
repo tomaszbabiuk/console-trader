@@ -1,43 +1,65 @@
 package org.consoletrader.wallet
 
 import io.reactivex.Single
-import org.consoletrader.common.Condition
 import org.consoletrader.common.EvaluationResult
 import org.consoletrader.common.ExchangeManager
+import org.consoletrader.common.Task
+import kotlin.system.exitProcess
 
-open class BalanceAboveCondition(exchangeManager: ExchangeManager, val params: CurrencyAndValueExtendedParams) : Condition {
+abstract class BalanceTask(exchangeManager: ExchangeManager) : Task {
     private val listAssetsDataSource = ListAssetsDataSource(exchangeManager)
 
-    override fun buildEvaluator(): Single<EvaluationResult> {
-        return listAssetsDataSource.
+    override fun execute(paramsRaw: String) {
+        val params = CurrencyAndValueExtendedParams(paramsRaw)
+
+        listAssetsDataSource.
                 createObservable()
                 .filter {
                     it.assetSymbol == params.currency.symbol
                 }
                 .toList()
-                .flatMap {
+                .doOnSuccess {
                     if (it.size == 1) {
-                        val amount = it[0].amount
-                        val result = buildEvaluationResult(amount)
-                        Single.just(result)
+                        print(it)
+
+                        val balance = it[0].amount
+                        val result = verifyBalance(balance, params.value)
+                        if (result) {
+                            exitProcess(0)
+                        } else {
+                            exitProcess(1)
+                        }
                     } else {
                         val result = EvaluationResult(false, "[FALSE} There's no record about ${params.currency} on the wallet")
                         Single.just(result)
                     }
                 }
+                .doOnError {
+                    println(it)
+                    exitProcess(1)
+                }
+                .blockingGet()
     }
 
-    protected open fun buildEvaluationResult(amount: Double): EvaluationResult {
-        val passed = amount >= params.value
-        val comment = "[${passed.toString().toUpperCase()}] Balance of ${params.currency}: ${amount} > ${params.value}"
-        return EvaluationResult(passed, comment)
+    abstract fun verifyBalance(balance: Double, threshold: Double): Boolean
+}
+
+class BalanceAboveTask(exchangeManager: ExchangeManager) : BalanceTask(exchangeManager) {
+    override fun match(paramsRaw: String): Boolean {
+        return paramsRaw.startsWith("balanceabove")
+    }
+
+    override fun verifyBalance(balance: Double, threshold: Double): Boolean {
+        return balance > threshold
     }
 }
 
-class MaxBalanceCondition(exchangeManager: ExchangeManager, params: CurrencyAndValueExtendedParams) : BalanceAboveCondition(exchangeManager, params) {
-    override fun buildEvaluationResult(amount: Double): EvaluationResult {
-        val passed = amount <= params.value
-        val comment = "[${passed.toString().toUpperCase()}] Wallet balance of ${params.currency}: ${amount} < ${params.value}"
-        return EvaluationResult(passed, comment)
+class BalanceBelowTask(exchangeManager: ExchangeManager) : BalanceTask(exchangeManager) {
+    override fun match(paramsRaw: String): Boolean {
+        return paramsRaw.startsWith("balancebelow")
+    }
+
+    override fun verifyBalance(balance: Double, threshold: Double): Boolean {
+        return balance < threshold
     }
 }

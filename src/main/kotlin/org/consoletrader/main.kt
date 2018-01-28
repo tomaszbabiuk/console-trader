@@ -13,9 +13,7 @@ import org.consoletrader.profit.ProfitConditionFactory
 import org.consoletrader.analyse.AnalyseTask
 import org.consoletrader.bash.ExitTask
 import org.consoletrader.strategy.MatchStrategyTask
-import org.consoletrader.wallet.BalanceBelowConditionFactory
-import org.consoletrader.wallet.BalanceAboveConditionFactory
-import org.consoletrader.wallet.WalletTask
+import org.consoletrader.wallet.*
 import kotlin.system.exitProcess
 
 
@@ -44,8 +42,6 @@ fun main(args: Array<String>) {
     allConditionFactories.add(BestOversoldRsiConditionFactory(exchangeManager))
     allConditionFactories.add(BestOverboughtRsiConditionFactory(exchangeManager))
     allConditionFactories.add(ProfitConditionFactory(exchangeManager))
-    allConditionFactories.add(BalanceAboveConditionFactory(exchangeManager))
-    allConditionFactories.add(BalanceBelowConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
     allTasks += WalletTask(exchangeManager)
@@ -57,6 +53,8 @@ fun main(args: Array<String>) {
     allTasks += CalculateStopPriceTask(exchangeManager)
     allTasks += MarketCapAboveTask()
     allTasks += MarketCapBelowTask()
+    allTasks += BalanceAboveTask(exchangeManager)
+    allTasks += BalanceBelowTask(exchangeManager)
     allTasks += ExitTask()
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
@@ -138,7 +136,12 @@ fun printUsage() {
         -task:marketbuy([pair]|[value]) - places market buy order on specific pair
         -task:marketsell([pair]|[value]) - places market sell order on specific pair
         -task:pushoveralert([apiKey]|[userId]|[message]) - sends push notification using pushover service
-        -task:marketcapabove([pair]|[threshold]) - exits 0 if marketcap value is above threshold, otherwise exits 1
+
+        -task:marketcapabove([pair]|[threshold]) - exits 0 if market cap value is above threshold, otherwise exits 1
+        -task:marketcapabelow([pair]|[threshold]) - exits 0 if market cap value is below threshold, otherwise exits 1
+
+        -task:balanceabove([currency]|[threshold]) - exits 0 it balance of specified currency is above threshold, otherwise exits 1
+        -task:balanceabelow([currency]|[threshold]) - exits 0 it balance of specified currency is below threshold, otherwise exits 1
 
     """.trimIndent())
 }
