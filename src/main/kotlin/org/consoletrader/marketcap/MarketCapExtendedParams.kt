@@ -3,12 +3,12 @@ package org.consoletrader.marketcap
 import org.consoletrader.common.ExtendedParams
 import org.consoletrader.common.ParsingParameterException
 
-class MarketCapExtendedParams(taskRaw: String) : ExtendedParams() {
+class MarketCapExtendedParams(paramsRaw: String) : ExtendedParams() {
     val amount: Double
 
     init {
         amount = try {
-            val paramsArray = splitParameters(taskRaw)
+            val paramsArray = splitParameters(paramsRaw)
             val amountRaw = paramsArray[0]
             if (amountRaw.toLowerCase().endsWith("bln")) {
                 amountRaw.toLowerCase().removeSuffix("bln").toDouble() * 10e8
