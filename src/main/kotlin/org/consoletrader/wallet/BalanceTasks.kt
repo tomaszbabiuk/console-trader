@@ -1,7 +1,6 @@
 package org.consoletrader.wallet
 
 import io.reactivex.Single
-import org.consoletrader.common.EvaluationResult
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
 import kotlin.system.exitProcess
@@ -30,8 +29,7 @@ abstract class BalanceTask(exchangeManager: ExchangeManager) : Task {
                             exitProcess(1)
                         }
                     } else {
-                        val result = EvaluationResult(false, "[FALSE} There's no record about ${params.currency} on the wallet")
-                        Single.just(result)
+                        exitProcess(1)
                     }
                 }
                 .doOnError {

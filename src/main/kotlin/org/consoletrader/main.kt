@@ -14,7 +14,6 @@ import org.consoletrader.profit.MinProfitTask
 import org.consoletrader.strategy.MatchStrategyTask
 import org.consoletrader.wallet.*
 
-
 fun main(args: Array<String>) {
     val exchangeName = checkArgument(args, "exchange", "Exchange not defined. Allowed markets: binance, bitfinex")
     val apiKey = checkArgument(args, "key", "API key not defined")
@@ -31,10 +30,6 @@ fun main(args: Array<String>) {
         println("The exchange $exchangeName is not supported")
         return
     }
-
-    val allConditionFactories = ArrayList<ConditionFactory>()
-    allConditionFactories.add(MacdCrossUpConditionFactory(exchangeManager))
-    allConditionFactories.add(MacdCrossDownConditionFactory(exchangeManager))
 
     val allTasks = ArrayList<Task>()
     allTasks += WalletTask(exchangeManager)
@@ -53,6 +48,8 @@ fun main(args: Array<String>) {
     allTasks += MinProfitTask(exchangeManager)
     allTasks += ClosePriceAboveTask(exchangeManager)
     allTasks += ClosePriceBelowTask(exchangeManager)
+    allTasks += MacdCrossDownTask(exchangeManager)
+    allTasks += MacdCrossUpTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
@@ -113,5 +110,8 @@ fun printUsage() {
         -task:bestoverboughtrsi([pair]|[rsi advance]) - exits 0 if current rsi of specified pair is above best calculated oversold rsi value (minus "rsi advance" as correction), otherwise exits 1
 
         -task:minprofit([pair]|[last buying amount to consider]|[return of investment threshold] - exits 0 if return of investment is above threshold, otherwise return 1
+
+        -task:macdcrossup([pair]) - exits 0 if MACD crosses up, otherwise exits 1
+        -task:macdcrossdown([pair]) - exits 0 if MACD crosses down, otherwise exits 1
     """.trimIndent())
 }
