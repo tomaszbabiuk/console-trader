@@ -1,6 +1,5 @@
 package org.consoletrader
 
-
 import org.consoletrader.common.*
 import org.consoletrader.exchange.ExchangeMatcher
 import org.consoletrader.indicators.*
@@ -17,7 +16,7 @@ fun main(args: Array<String>) {
     val exchangeName = checkArgument(args, "exchange", "Exchange not defined. Allowed markets: binance, bitfinex")
     val apiKey = checkArgument(args, "key", "API key not defined")
     val apiSecret = checkArgument(args, "secret", "Api secret not defined")
-    val taskRaw = checkArgument(args, "task", "Task not defined. Allowed tasks: wallet, watchrsibelow, watchrsiabove")
+    val taskRaw = checkArgument(args, "task", "Task not defined.")
 
     if (args.isEmpty() || exchangeName == null || apiKey == null || apiSecret == null || taskRaw == null) {
         printUsage()
@@ -31,18 +30,20 @@ fun main(args: Array<String>) {
     }
 
     val allTasks = ArrayList<Task>()
+    allTasks += MarketCapAboveTask()
+    allTasks += MarketCapBelowTask()
     allTasks += WalletTask(exchangeManager)
     allTasks += MarketBuyTask(exchangeManager)
     allTasks += MarketSellTask(exchangeManager)
     allTasks += PushoverNotificationTask(exchangeManager)
     allTasks += AnalyseTask(exchangeManager)
     allTasks += CalculateStopPriceTask(exchangeManager)
-    allTasks += MarketCapAboveTask()
-    allTasks += MarketCapBelowTask()
     allTasks += BalanceAboveTask(exchangeManager)
     allTasks += BalanceBelowTask(exchangeManager)
     allTasks += BestOverboughtRsiTask(exchangeManager)
     allTasks += BestOversoldRsiTask(exchangeManager)
+    allTasks += RsiAboveTask(exchangeManager)
+    allTasks += RsiBelowTask(exchangeManager)
     allTasks += MinProfitTask(exchangeManager)
     allTasks += ClosePriceAboveTask(exchangeManager)
     allTasks += ClosePriceBelowTask(exchangeManager)
@@ -103,13 +104,17 @@ fun printUsage() {
         -task:balanceabove([currency]|[threshold]) - exits 0 if balance of specified currency is above threshold, otherwise exits 1
         -task:balanceabelow([currency]|[threshold]) - exits 0 if balance of specified currency is below threshold, otherwise exits 1
 
+        -task:rsiabove([currency]|[threshold]) - exits 0 if RSI of specified currency is above threshold, otherwise exits 1
+        -task:rsibelow([currency]|[threshold]) - exits 0 if RSI of specified currency is below threshold, otherwise exits 1
+
+        -task:macdcrossup([pair]) - exits 0 if MACD crosses up, otherwise exits 1
+        -task:macdcrossdown([pair]) - exits 0 if MACD crosses down, otherwise exits 1
+
         -task:bestoversoldrsi([pair]|[rsi advance]|[min short gain]|[min loss]) - exits 0 if current rsi of specified pair is below best calculated overbought rsi value (plus "rsi advance" as a correction), otherwise exits 1
               you can also provide min short gain (in percent) and min loss (also in percent) in order to deepen the analysis
         -task:bestoverboughtrsi([pair]|[rsi advance]) - exits 0 if current rsi of specified pair is above best calculated oversold rsi value (minus "rsi advance" as correction), otherwise exits 1
 
         -task:minprofit([pair]|[last buying amount to consider]|[return of investment threshold] - exits 0 if return of investment is above threshold, otherwise return 1
 
-        -task:macdcrossup([pair]) - exits 0 if MACD crosses up, otherwise exits 1
-        -task:macdcrossdown([pair]) - exits 0 if MACD crosses down, otherwise exits 1
     """.trimIndent())
 }
