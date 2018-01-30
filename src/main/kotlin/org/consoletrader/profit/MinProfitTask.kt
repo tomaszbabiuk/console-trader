@@ -14,7 +14,7 @@ class MinProfitTask(val exchangeManager: ExchangeManager) : Task {
         val profitDataSource = ProfitDataSource(exchangeManager, params.currencyPair, params.countedAmount)
 
         profitDataSource
-                .createSingle()
+                .create()
                 .doOnSuccess {
                     println(it)
 

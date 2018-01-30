@@ -1,6 +1,5 @@
 package org.consoletrader.wallet
 
-import io.reactivex.Single
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
 import kotlin.system.exitProcess
@@ -12,7 +11,9 @@ abstract class BalanceTask(exchangeManager: ExchangeManager) : Task {
         val params = CurrencyAndValueExtendedParams(paramsRaw)
 
         listAssetsDataSource.
-                createObservable()
+                create()
+                .toObservable()
+                .flatMapIterable { it }
                 .filter {
                     it.assetSymbol == params.currency.symbol
                 }

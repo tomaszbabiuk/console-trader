@@ -24,7 +24,7 @@ class MatchStrategyTask(val exchangeManager: ExchangeManager) : Task {
         println("Calculating best RSI strategy for ${params.currencyPair} pair")
         val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
         dataSource
-                .createObservable()
+                .create()
                 .map {it.series }
                 .subscribe { series ->
             var bestOversold = 0

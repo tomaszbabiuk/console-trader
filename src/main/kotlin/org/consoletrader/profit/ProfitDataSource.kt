@@ -1,6 +1,5 @@
 package org.consoletrader.profit
 
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.DataSource
@@ -57,7 +56,7 @@ class ProfitDataSource(private val exchangeManager: ExchangeManager, private val
         return Profit(averagePrice, marketPrice, roi)
     }
 
-    override fun createSingle(): Single<Profit> {
+    override fun create(): Single<Profit> {
 
         val walletObservable = Single.just(accountService.accountInfo.wallet.getBalance(pair.base))
         val tickerObservable = Single.just(exchangeManager.exchange.marketDataService.getTicker(pair))
@@ -68,11 +67,5 @@ class ProfitDataSource(private val exchangeManager: ExchangeManager, private val
                 tickerObservable,
                 tradesObservable,
                 Function3(this::calculateProfitFromLastTrades))
-    }
-
-
-    override fun createObservable(): Observable<Profit> {
-        return createSingle()
-                .toObservable()
     }
 }

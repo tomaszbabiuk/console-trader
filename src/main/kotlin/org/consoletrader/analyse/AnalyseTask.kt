@@ -20,7 +20,9 @@ class AnalyseTask(val exchangeManager: ExchangeManager) : Task {
                     it
                 }
                 .flatMap {
-                    IndicatorsDataSource(exchangeManager, it).createObservable()
+                    IndicatorsDataSource(exchangeManager, it)
+                            .create()
+                            .toObservable()
                 }
                 .map {
                     AnalyseResult(it)

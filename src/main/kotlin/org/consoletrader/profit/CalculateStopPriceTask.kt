@@ -16,7 +16,7 @@ class CalculateStopPriceTask(val exchangeManager: ExchangeManager) : Task {
         val dataSource = ProfitDataSource(exchangeManager, params.currencyPair, params.value)
 
         dataSource
-                .createSingle()
+                .create()
                 .doOnSuccess {
                     println(it)
                 }

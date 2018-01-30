@@ -8,21 +8,10 @@ import org.knowm.xchange.currency.CurrencyPair
 import org.knowm.xchange.service.marketdata.MarketDataService
 import java.math.BigDecimal
 
-open class ListAssetsDataSource(exchangeManager: ExchangeManager) : DataSource<PortfolioAsset> {
+open class ListAssetsDataSource(exchangeManager: ExchangeManager) : DataSource<MutableList<PortfolioAsset>> {
     private val marketDataService: MarketDataService = exchangeManager.exchange.marketDataService
     private val accountService = exchangeManager.exchange.accountService
     private var etherPrice: Double? = null
-
-    override fun createObservable() : Observable<PortfolioAsset> {
-        return Observable
-                .just(accountService.accountInfo)
-                .flatMapIterable { it.wallet.balances.values }
-                .filter { it.total > BigDecimal.ZERO}
-                .map {
-                    val usd = calculateAssetPrice(it.currency.toString(), it.total.toDouble())
-                    PortfolioAsset(it.currency.symbol, it.total.toDouble(), usd)
-                }
-    }
 
     private fun calculateAssetPrice(symbol: String, amount: Double): Double {
         val usdCurrencyPair = CurrencyPair(symbol, "USD")
@@ -63,7 +52,15 @@ open class ListAssetsDataSource(exchangeManager: ExchangeManager) : DataSource<P
         return null
     }
 
-    override fun createSingle(): Single<PortfolioAsset> {
-        return null!!
+    override fun create(): Single<MutableList<PortfolioAsset>> {
+        return Observable
+                .just(accountService.accountInfo)
+                .flatMapIterable { it.wallet.balances.values }
+                .filter { it.total > BigDecimal.ZERO}
+                .map {
+                    val usd = calculateAssetPrice(it.currency.toString(), it.total.toDouble())
+                    PortfolioAsset(it.currency.symbol, it.total.toDouble(), usd)
+                }
+                .toList()
     }
 }

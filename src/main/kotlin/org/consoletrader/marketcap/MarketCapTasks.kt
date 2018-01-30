@@ -10,7 +10,7 @@ abstract class MarketCapTask : Task {
     override fun execute(paramsRaw: String) {
         val params = MarketCapExtendedParams(paramsRaw)
         marketCapService
-                .createSingle()
+                .create()
                 .doOnSuccess {
                     println(it)
 

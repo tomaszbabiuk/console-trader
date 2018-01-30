@@ -12,7 +12,7 @@ abstract class ClosePriceTask(val exchangeManager: ExchangeManager) : Task {
         val params = PairAndDoubleExtendedParams(paramsRaw)
         val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
         dataSource
-                .createSingle()
+                .create()
                 .map { it.series }
                 .doOnSuccess {
                     val result = checkClosePrice(it, params)

@@ -3,20 +3,20 @@ package org.consoletrader.wallet
 import org.consoletrader.common.DataSource
 import org.consoletrader.common.ResultPresenter
 
-class ListAssetsResultPresenter : ResultPresenter<PortfolioAsset> {
+class ListAssetsResultPresenter : ResultPresenter<MutableList<PortfolioAsset>> {
 
-    override fun present(dataSource: DataSource<PortfolioAsset>) {
-        var usdSum = 0.0
+    override fun present(dataSource: DataSource<MutableList<PortfolioAsset>>) {
         dataSource
-                .createObservable()
-                .doOnComplete {
+                .create()
+                .doOnSuccess {
+                    var usdSum = 0.0
+                    it.forEach {
+                        usdSum += it.priceInDollars
+                        println(it)
+                    }
                     println("=========================")
                     println("TOTAL $usdSum$")
                 }
-                .subscribe {
-                    println(it)
-                    usdSum += it.priceInDollars
-                }
-
+                .blockingGet()
     }
 }

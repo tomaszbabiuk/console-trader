@@ -9,7 +9,7 @@ abstract class BestRsiTask(val exchangeManager: ExchangeManager) : Task {
         val params = BestOversoldRsiExtendedParams(paramsRaw)
         val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
         dataSource
-                .createSingle()
+                .create()
                 .map { it.series }
                 .map {
                     val indicatorsData = IndicatorsData(it, params.currencyPair)

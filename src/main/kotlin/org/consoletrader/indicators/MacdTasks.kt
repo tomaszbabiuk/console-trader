@@ -13,7 +13,7 @@ abstract class MacdTask(val exchangeManager: ExchangeManager) : Task {
         val params = PairExtendedParams(paramsRaw)
         val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
         dataSource
-                .createSingle()
+                .create()
                 .map { it.series }
                 .doOnSuccess {
                     println(it)
