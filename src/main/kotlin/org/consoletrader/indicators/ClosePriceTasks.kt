@@ -1,41 +1,29 @@
 package org.consoletrader.indicators
 
+import io.reactivex.Single
+import org.consoletrader.common.DataSourceTask
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.PairAndDoubleExtendedParams
-import org.consoletrader.common.Task
 import org.ta4j.core.TimeSeries
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator
-import kotlin.system.exitProcess
 
-abstract class ClosePriceTask(val exchangeManager: ExchangeManager) : Task {
-    override fun execute(paramsRaw: String) {
-        val params = PairAndDoubleExtendedParams(paramsRaw)
-        val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
-        dataSource
+abstract class ClosePriceTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSeries, PairAndDoubleExtendedParams>() {
+    override fun createDataSource(params: PairAndDoubleExtendedParams): Single<TimeSeries> {
+        return IndicatorsDataSource(exchangeManager, params.currencyPair)
                 .create()
                 .map { it.series }
-                .doOnSuccess {
-                    val result = checkClosePrice(it, params)
-                    if (result) {
-                        exitProcess(0)
-                    } else {
-                        exitProcess(1)
-                    }
-                }
-                .doOnError {
-                    println(it)
-                    exitProcess(1)
-                }
-                .blockingGet()
+
     }
 
-    abstract fun checkClosePrice(series: TimeSeries, params: PairAndDoubleExtendedParams): Boolean
+    override fun createParams(paramsRaw: String): PairAndDoubleExtendedParams {
+        return PairAndDoubleExtendedParams(paramsRaw)
+    }
 }
 
 class ClosePriceAboveTask(exchangeManager: ExchangeManager) : ClosePriceTask(exchangeManager) {
-    override fun checkClosePrice(series: TimeSeries, params: PairAndDoubleExtendedParams): Boolean {
-        val closePriceIndicator = ClosePriceIndicator(series)
-        val closePrice = closePriceIndicator.getValue(series.tickCount - 1).toDouble()
+    override fun verifySuccess(data: TimeSeries, params: PairAndDoubleExtendedParams): Boolean {
+        val closePriceIndicator = ClosePriceIndicator(data)
+        val closePrice = closePriceIndicator.getValue(data.tickCount - 1).toDouble()
         val passed = closePrice > params.value
         println("[${passed.toString().toUpperCase()}] Close price of ${params.currencyPair}: $closePrice > ${params.value}")
         return passed
@@ -47,9 +35,9 @@ class ClosePriceAboveTask(exchangeManager: ExchangeManager) : ClosePriceTask(exc
 }
 
 class ClosePriceBelowTask(exchangeManager: ExchangeManager) : ClosePriceTask(exchangeManager) {
-    override fun checkClosePrice(series: TimeSeries, params: PairAndDoubleExtendedParams): Boolean {
-        val closePriceIndicator = ClosePriceIndicator(series)
-        val closePrice = closePriceIndicator.getValue(series.tickCount - 1).toDouble()
+    override fun verifySuccess(data: TimeSeries, params: PairAndDoubleExtendedParams): Boolean {
+        val closePriceIndicator = ClosePriceIndicator(data)
+        val closePrice = closePriceIndicator.getValue(data.tickCount - 1).toDouble()
         val passed = closePrice < params.value
         println("[${passed.toString().toUpperCase()}] Close price of ${params.currencyPair}: $closePrice < ${params.value}")
         return passed

@@ -11,7 +11,6 @@ import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.profit.CalculateStopPriceTask
 import org.consoletrader.analyse.AnalyseTask
 import org.consoletrader.profit.MinProfitTask
-import org.consoletrader.strategy.MatchStrategyTask
 import org.consoletrader.wallet.*
 
 fun main(args: Array<String>) {
@@ -35,7 +34,6 @@ fun main(args: Array<String>) {
     allTasks += WalletTask(exchangeManager)
     allTasks += MarketBuyTask(exchangeManager)
     allTasks += MarketSellTask(exchangeManager)
-    allTasks += MatchStrategyTask(exchangeManager)
     allTasks += PushoverNotificationTask(exchangeManager)
     allTasks += AnalyseTask(exchangeManager)
     allTasks += CalculateStopPriceTask(exchangeManager)

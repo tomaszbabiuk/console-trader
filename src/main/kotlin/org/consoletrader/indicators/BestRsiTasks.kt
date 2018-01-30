@@ -1,38 +1,22 @@
 package org.consoletrader.indicators
 
+import io.reactivex.Single
 import org.consoletrader.common.*
-import kotlin.system.exitProcess
 
-abstract class BestRsiTask(val exchangeManager: ExchangeManager) : Task {
-
-    override fun execute(paramsRaw: String) {
-        val params = BestOversoldRsiExtendedParams(paramsRaw)
-        val dataSource = IndicatorsDataSource(exchangeManager, params.currencyPair)
-        dataSource
+abstract class BestRsiTask(val exchangeManager: ExchangeManager) : DataSourceTask<AnalyseResult, BestOversoldRsiExtendedParams>() {
+    override fun createDataSource(params: BestOversoldRsiExtendedParams): Single<AnalyseResult> {
+        return IndicatorsDataSource(exchangeManager, params.currencyPair)
                 .create()
                 .map { it.series }
                 .map {
                     val indicatorsData = IndicatorsData(it, params.currencyPair)
                     AnalyseResult(indicatorsData)
                 }
-                .doOnSuccess {
-                    println(it)
-
-                    val result = verify(it, params)
-                    if (result) {
-                        exitProcess(0)
-                    } else {
-                        exitProcess(1)
-                    }
-                }
-                .doOnError {
-                    println(it)
-                    exitProcess(1)
-                }
-                .blockingGet()
     }
 
-    abstract fun verify(analyseResult: AnalyseResult, params: BestOversoldRsiExtendedParams): Boolean
+    override fun createParams(paramsRaw: String): BestOversoldRsiExtendedParams {
+        return BestOversoldRsiExtendedParams(paramsRaw)
+    }
 }
 
 
@@ -41,16 +25,16 @@ class BestOversoldRsiTask(exchangeManager: ExchangeManager) : BestRsiTask(exchan
         return paramsRaw.startsWith("bestoversoldrsi")
     }
 
-    override fun verify(analyseResult: AnalyseResult, params: BestOversoldRsiExtendedParams): Boolean {
-        val gainPassed = analyseResult.calculateGain() > params.minShortGain
-        val athLossPassed = analyseResult.calculateAthLoss() > params.minAthLoss
-        val rsiPassed = analyseResult.currentRsi < analyseResult.bestOversoldRsi + params.rsiAdvance
-        val rising = analyseResult.currentRsi > analyseResult.bestOversoldRsi
+    override fun verifySuccess(data: AnalyseResult, params: BestOversoldRsiExtendedParams): Boolean {
+        val gainPassed = data.calculateGain() > params.minShortGain
+        val athLossPassed = data.calculateAthLoss() > params.minAthLoss
+        val rsiPassed = data.currentRsi < data.bestOversoldRsi + params.rsiAdvance
+        val rising = data.currentRsi > data.bestOversoldRsi
         val passed = gainPassed && athLossPassed && rsiPassed && rising
-        println("[${rsiPassed.toString().toUpperCase()}] best oversold RSI: ${analyseResult.currentRsi} < ${analyseResult.bestOversoldRsi} + ${params.rsiAdvance}")
-        println("[${gainPassed.toString().toUpperCase()}] min gain: ${analyseResult.calculateGain()} > ${params.minShortGain}")
-        println("[${athLossPassed.toString().toUpperCase()}] min ath loss: ${analyseResult.calculateAthLoss()} > ${params.minAthLoss}")
-        println("[${rising.toString().toUpperCase()}] rising: ${analyseResult.currentRsi} > ${analyseResult.bestOversoldRsi}")
+        println("[${rsiPassed.toString().toUpperCase()}] best oversold RSI: ${data.currentRsi} < ${data.bestOversoldRsi} + ${params.rsiAdvance}")
+        println("[${gainPassed.toString().toUpperCase()}] min gain: ${data.calculateGain()} > ${params.minShortGain}")
+        println("[${athLossPassed.toString().toUpperCase()}] min ath loss: ${data.calculateAthLoss()} > ${params.minAthLoss}")
+        println("[${rising.toString().toUpperCase()}] rising: ${data.currentRsi} > ${data.bestOversoldRsi}")
 
         return passed
     }
@@ -61,9 +45,9 @@ class BestOverboughtRsiTask(exchangeManager: ExchangeManager) : BestRsiTask(exch
         return paramsRaw.startsWith("bestoverboughtrsi")
     }
 
-    override fun verify(analyseResult: AnalyseResult, params: BestOversoldRsiExtendedParams): Boolean {
-        val passed = analyseResult.currentRsi > analyseResult.bestOverboughtRsi - params.rsiAdvance
-        println("[${passed.toString().toUpperCase()}] best overbought RSI of ${params.currencyPair}: ${analyseResult.currentRsi} > ${analyseResult.bestOverboughtRsi} - ${params.rsiAdvance}")
+    override fun verifySuccess(data: AnalyseResult, params: BestOversoldRsiExtendedParams): Boolean {
+        val passed = data.currentRsi > data.bestOverboughtRsi - params.rsiAdvance
+        println("[${passed.toString().toUpperCase()}] best overbought RSI of ${params.currencyPair}: ${data.currentRsi} > ${data.bestOverboughtRsi} - ${params.rsiAdvance}")
         return passed
     }
 }

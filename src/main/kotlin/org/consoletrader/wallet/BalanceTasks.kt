@@ -1,46 +1,24 @@
 package org.consoletrader.wallet
 
+import io.reactivex.Single
+import org.consoletrader.common.DataSourceTask
 import org.consoletrader.common.ExchangeManager
-import org.consoletrader.common.Task
-import kotlin.system.exitProcess
 
-abstract class BalanceTask(exchangeManager: ExchangeManager) : Task {
-    private val listAssetsDataSource = ListAssetsDataSource(exchangeManager)
 
-    override fun execute(paramsRaw: String) {
-        val params = CurrencyAndValueExtendedParams(paramsRaw)
-
-        listAssetsDataSource.
-                create()
+abstract class BalanceTask(val exchangeManager: ExchangeManager) : DataSourceTask<PortfolioAsset, CurrencyAndValueExtendedParams>() {
+    override fun createDataSource(params: CurrencyAndValueExtendedParams): Single<PortfolioAsset> {
+        return ListAssetsDataSource(exchangeManager).create()
                 .toObservable()
                 .flatMapIterable { it }
                 .filter {
                     it.assetSymbol == params.currency.symbol
                 }
-                .toList()
-                .doOnSuccess {
-                    if (it.size == 1) {
-                        print(it)
-
-                        val balance = it[0].amount
-                        val result = verifyBalance(balance, params.value)
-                        if (result) {
-                            exitProcess(0)
-                        } else {
-                            exitProcess(1)
-                        }
-                    } else {
-                        exitProcess(1)
-                    }
-                }
-                .doOnError {
-                    println(it)
-                    exitProcess(1)
-                }
-                .blockingGet()
+                .firstOrError()
     }
 
-    abstract fun verifyBalance(balance: Double, threshold: Double): Boolean
+    override fun createParams(paramsRaw: String): CurrencyAndValueExtendedParams {
+        return CurrencyAndValueExtendedParams(paramsRaw)
+    }
 }
 
 class BalanceAboveTask(exchangeManager: ExchangeManager) : BalanceTask(exchangeManager) {
@@ -48,8 +26,8 @@ class BalanceAboveTask(exchangeManager: ExchangeManager) : BalanceTask(exchangeM
         return paramsRaw.startsWith("balanceabove")
     }
 
-    override fun verifyBalance(balance: Double, threshold: Double): Boolean {
-        return balance > threshold
+    override fun verifySuccess(data: PortfolioAsset, params: CurrencyAndValueExtendedParams): Boolean {
+        return data.amount > params.value
     }
 }
 
@@ -58,7 +36,7 @@ class BalanceBelowTask(exchangeManager: ExchangeManager) : BalanceTask(exchangeM
         return paramsRaw.startsWith("balancebelow")
     }
 
-    override fun verifyBalance(balance: Double, threshold: Double): Boolean {
-        return balance < threshold
+    override fun verifySuccess(data: PortfolioAsset, params: CurrencyAndValueExtendedParams): Boolean {
+        return data.amount < params.value
     }
 }
