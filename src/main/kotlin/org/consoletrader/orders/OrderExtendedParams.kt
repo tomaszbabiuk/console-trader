@@ -6,10 +6,11 @@ import org.knowm.xchange.currency.Currency
 import org.knowm.xchange.currency.CurrencyPair
 import java.math.BigDecimal
 
-open class MarketExtendedParams(taskRaw: String) : ExtendedParams() {
+open class OrderExtendedParams(taskRaw: String) : ExtendedParams() {
     val currencyPair: CurrencyPair
     val amountValue: BigDecimal
     val amountCurrency: Currency
+    var price: Double = 0.0
 
     init {
         try {
@@ -31,6 +32,10 @@ open class MarketExtendedParams(taskRaw: String) : ExtendedParams() {
                 currencyPair.base
             } else {
                 currencyPair.counter
+            }
+
+            if (taskParamsSplit.size == 3) {
+                price = taskParamsSplit[2].toDouble()
             }
         } catch (ex: Exception) {
             throw ParsingParameterException("Error creating task params", ex)

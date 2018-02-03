@@ -10,6 +10,7 @@ import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.roi.CalculateStopPriceTask
 import org.consoletrader.analyse.AnalyseTask
 import org.consoletrader.orders.CancelOrdersTask
+import org.consoletrader.orders.TrailingStopTask
 import org.consoletrader.roi.RoiAboveTask
 import org.consoletrader.roi.RoiBelowTask
 import org.consoletrader.wallet.*
@@ -37,6 +38,7 @@ fun main(args: Array<String>) {
     allTasks += WalletTask(exchangeManager)
     allTasks += MarketBuyTask(exchangeManager)
     allTasks += MarketSellTask(exchangeManager)
+    allTasks += TrailingStopTask(exchangeManager)
     allTasks += PushoverNotificationTask(exchangeManager)
     allTasks += AnalyseTask(exchangeManager)
     allTasks += CalculateStopPriceTask(exchangeManager)
@@ -98,8 +100,10 @@ fun printUsage() {
 
         Tasks:
         -task:wallet - prints list of assets (portfolio/wallet)
+
         -task:marketbuy([pair]|[value]) - places market buy order on specific pair
         -task:marketsell([pair]|[value]) - places market sell order on specific pair
+        -task:trailingstop([pair]|[value]|[distance]) - places trailing stop order on specific pair (only for Bitfinex)
         -task:cancelorders([pair]) - cancels all orders on specific pair
 
         -task:pushoveralert([apiKey]|[userId]|[message]) - sends push notification using pushover service

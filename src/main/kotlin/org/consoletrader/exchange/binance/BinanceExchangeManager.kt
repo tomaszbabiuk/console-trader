@@ -5,9 +5,15 @@ import org.knowm.xchange.binance.BinanceExchange
 import org.knowm.xchange.binance.service.BinanceTradeHistoryParams
 import org.knowm.xchange.currency.CurrencyPair
 import org.knowm.xchange.dto.trade.UserTrades
+import java.math.BigDecimal
+import javax.ws.rs.NotSupportedException
 
 class BinanceExchangeManager(apiKey: String, apiSecret: String) :
         ExchangeManager(BinanceExchange().defaultExchangeSpecification, apiKey, apiSecret, BinanceCandleService()) {
+    override fun placeStopOrder(pair: CurrencyPair, price: BigDecimal, amount: BigDecimal) {
+        throw NotSupportedException("Trailing stop orders are not supported for BINANCE exchange")
+    }
+
     override fun getMaximumTradeHistory(pair: CurrencyPair): UserTrades {
         return getTradeHistory(pair, 100)
     }
