@@ -10,6 +10,7 @@ import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.profit.CalculateStopPriceTask
 import org.consoletrader.analyse.AnalyseTask
+import org.consoletrader.orders.CancelOrdersTask
 import org.consoletrader.profit.MinProfitTask
 import org.consoletrader.strategy.MatchStrategyTask
 import org.consoletrader.wallet.*
@@ -53,6 +54,7 @@ fun main(args: Array<String>) {
     allTasks += MinProfitTask(exchangeManager)
     allTasks += ClosePriceAboveTask(exchangeManager)
     allTasks += ClosePriceBelowTask(exchangeManager)
+    allTasks += CancelOrdersTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
@@ -100,6 +102,8 @@ fun printUsage() {
         -task:wallet - prints list of assets (portfolio/wallet)
         -task:marketbuy([pair]|[value]) - places market buy order on specific pair
         -task:marketsell([pair]|[value]) - places market sell order on specific pair
+        -task:cancelorders([pair]) - cancels all orders on specific pair
+
         -task:pushoveralert([apiKey]|[userId]|[message]) - sends push notification using pushover service
 
         -task:marketcapabove([pair]|[threshold]) - exits 0 if market cap value is above threshold, otherwise exits 1

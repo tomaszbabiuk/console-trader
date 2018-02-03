@@ -1,7 +1,5 @@
 package org.consoletrader.common
 
-import org.consoletrader.common.ParsingParameterException
-import org.consoletrader.common.ExtendedParams
 import org.knowm.xchange.currency.CurrencyPair
 
 open class PairExtendedParams(taskRaw: String) : ExtendedParams() {
