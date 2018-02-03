@@ -1,4 +1,4 @@
-package org.consoletrader.profit
+package org.consoletrader.roi
 
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.PairAndDoubleExtendedParams

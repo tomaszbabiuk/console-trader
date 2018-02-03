@@ -7,10 +7,11 @@ import org.consoletrader.marketcap.*
 import org.consoletrader.notifications.pushover.PushoverNotificationTask
 import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
-import org.consoletrader.profit.CalculateStopPriceTask
+import org.consoletrader.roi.CalculateStopPriceTask
 import org.consoletrader.analyse.AnalyseTask
 import org.consoletrader.orders.CancelOrdersTask
-import org.consoletrader.profit.MinProfitTask
+import org.consoletrader.roi.RoiAboveTask
+import org.consoletrader.roi.RoiBelowTask
 import org.consoletrader.wallet.*
 
 fun main(args: Array<String>) {
@@ -45,7 +46,8 @@ fun main(args: Array<String>) {
     allTasks += BestOversoldRsiTask(exchangeManager)
     allTasks += RsiAboveTask(exchangeManager)
     allTasks += RsiBelowTask(exchangeManager)
-    allTasks += MinProfitTask(exchangeManager)
+    allTasks += RoiAboveTask(exchangeManager)
+    allTasks += RoiBelowTask(exchangeManager)
     allTasks += ClosePriceAboveTask(exchangeManager)
     allTasks += ClosePriceBelowTask(exchangeManager)
     allTasks += MacdCrossDownTask(exchangeManager)
@@ -118,7 +120,8 @@ fun printUsage() {
               you can also provide min short gain (in percent) and min loss (also in percent) in order to deepen the analysis
         -task:bestoverboughtrsi([pair]|[rsi advance]) - exits 0 if current rsi of specified pair is above best calculated oversold rsi value (minus "rsi advance" as correction), otherwise exits 1
 
-        -task:minprofit([pair]|[last buying amount to consider]|[return of investment threshold] - exits 0 if return of investment is above threshold, otherwise return 1
+        -task:roiabove([pair]|[last buying amount to consider]|[return of investment threshold] - exits 0 if return of investment is above threshold, otherwise return 1
+        -task:roibelow([pair]|[last buying amount to consider]|[return of investment threshold] - exits 0 if return of investment is below threshold, otherwise return 1
 
     """.trimIndent())
 }

@@ -1,4 +1,4 @@
-package org.consoletrader.profit
+package org.consoletrader.roi
 
 import io.reactivex.Single
 import org.consoletrader.common.ExchangeManager

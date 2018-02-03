@@ -1,10 +1,10 @@
-package org.consoletrader.profit
+package org.consoletrader.roi
 
 import org.consoletrader.common.ExtendedParams
 import org.consoletrader.common.ParsingParameterException
 import org.knowm.xchange.currency.CurrencyPair
 
-class ProfitExtendedParams(taskRaw: String) : ExtendedParams() {
+class RoiExtendedParams(taskRaw: String) : ExtendedParams() {
     val currencyPair: CurrencyPair
     val countedAmount: Double
     val roi: Double
