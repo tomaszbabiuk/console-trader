@@ -1,9 +1,7 @@
 package org.consoletrader.orders
 
 import org.consoletrader.common.ExchangeManager
-import org.consoletrader.common.PairExtendedParams
 import org.consoletrader.common.Task
-import org.knowm.xchange.currency.CurrencyPair
 import org.knowm.xchange.dto.Order
 import org.knowm.xchange.dto.trade.MarketOrder
 import java.math.BigDecimal
@@ -17,12 +15,29 @@ abstract class OrderTask(val exchangeManager: ExchangeManager) : Task {
     }
 
     protected fun calculateAmount(params: OrderExtendedParams): BigDecimal {
-        return if (params.amountCurrency == params.currencyPair.counter) {
-            val tickerPrice = exchangeManager.exchange.marketDataService.getTicker(params.currencyPair).bid * BigDecimal.valueOf(1.05)
-            val amountToBuy: BigDecimal = params.amountValue.divide(tickerPrice, 2, RoundingMode.DOWN)
-            amountToBuy
-        } else {
-            params.amountValue
+        when (params.amountUnit) {
+            OrderExtendedParams.AmountUnit.CounterCurrency -> {
+                val tickerPrice = exchangeManager.exchange.marketDataService.getTicker(params.currencyPair).bid * BigDecimal.valueOf(1.05)
+                return params.amountValue.divide(tickerPrice, 2, RoundingMode.DOWN)
+            }
+            OrderExtendedParams.AmountUnit.Percent -> {
+                val balance = exchangeManager
+                        .exchange
+                        .accountService
+                        .accountInfo
+                        .wallet
+                        .balances
+                        .getOrDefault(params.currencyPair.base, null)
+
+                if (balance != null) {
+                    return balance.available.multiply(params.amountValue).divide(100.toBigDecimal())
+                }
+
+                return 0.0.toBigDecimal()
+            }
+            else -> {
+                return params.amountValue
+            }
         }
     }
 
