@@ -24,7 +24,7 @@ class RsiAboveTask(exchangeManager: ExchangeManager) : RsiTask(exchangeManager) 
         val closePriceIndicator = ClosePriceIndicator(data)
         val rsiIndicator = RSIIndicator(closePriceIndicator, 14)
         val rsi = rsiIndicator.getValue(data.tickCount - 1).toDouble()
-        val passed = rsi < params.value
+        val passed = rsi > params.value
         println("[${passed.toString().toUpperCase()}] RSI of ${params.currencyPair}: $rsi > ${params.value}")
         return passed
     }
