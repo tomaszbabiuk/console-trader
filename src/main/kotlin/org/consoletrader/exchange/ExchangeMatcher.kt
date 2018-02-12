@@ -3,7 +3,8 @@ package org.consoletrader.exchange
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.exchange.binance.BinanceExchangeManager
 import org.consoletrader.exchange.bitfinex.BitfinexExchangeManager
-//import org.consoletrader.exchange.kucoin.KuCoinExchangeManager
+import org.consoletrader.exchange.kucoin.KuCoinExchangeManager
+
 
 class ExchangeMatcher {
     fun match(name: String, apiKey: String, apiSecret: String): ExchangeManager? {
@@ -17,13 +18,9 @@ class ExchangeMatcher {
                 return BitfinexExchangeManager(apiKey, apiSecret)
             }
 
-//            "kucoin" -> {
-//                return KuCoinExchangeManager(apiKey, apiSecret)
-//            }
-//            "bitmarket" -> {
-//                exSpec = BitMarketExchange().defaultExchangeSpecification
-//                candlesService = BitmarketCandleService()
-//            }
+            "kucoin" -> {
+                return KuCoinExchangeManager(apiKey, apiSecret)
+            }
 
             else -> {
                 return null

@@ -1,13 +1,12 @@
 package org.consoletrader.notifications.pushover
 
 import okhttp3.OkHttpClient
-import org.consoletrader.notifications.NotificationsSender
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class PushoverNotificationSender : NotificationsSender {
+class PushoverNotificationSender : PushoverSender {
 
     private var api: PushoverApi
 

@@ -9,6 +9,7 @@ import org.consoletrader.orders.MarketBuyTask
 import org.consoletrader.orders.MarketSellTask
 import org.consoletrader.roi.CalculateStopPriceTask
 import org.consoletrader.analyse.AnalyseTask
+import org.consoletrader.notifications.gmail.GmailAlertTask
 import org.consoletrader.orders.CancelOrdersTask
 import org.consoletrader.orders.TrailingStopTask
 import org.consoletrader.roi.RoiAboveTask
@@ -35,11 +36,13 @@ fun main(args: Array<String>) {
     val allTasks = ArrayList<Task>()
     allTasks += MarketCapAboveTask()
     allTasks += MarketCapBelowTask()
+    allTasks += PushoverNotificationTask()
+    allTasks += GmailAlertTask()
+
     allTasks += WalletTask(exchangeManager)
     allTasks += MarketBuyTask(exchangeManager)
     allTasks += MarketSellTask(exchangeManager)
     allTasks += TrailingStopTask(exchangeManager)
-    allTasks += PushoverNotificationTask(exchangeManager)
     allTasks += AnalyseTask(exchangeManager)
     allTasks += CalculateStopPriceTask(exchangeManager)
     allTasks += BalanceAboveTask(exchangeManager)

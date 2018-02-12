@@ -6,11 +6,11 @@
 
     <groupId>cryptotools</groupId>
     <artifactId>org.consoletrader</artifactId>
-    <version>0.2</version>
+    <version>0.21</version>
 
     <properties>
         <kotlin.version>1.2.21</kotlin.version>
-        <knowm.version>4.3.2</knowm.version>
+        <knowm.version>4.3.3</knowm.version>
         <rxjava.version>2.1.6</rxjava.version>
         <retrofit.version>2.3.0</retrofit.version>
     </properties>
@@ -96,6 +96,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.knowm.xchange</groupId>
+            <artifactId>xchange-kucoin</artifactId>
+            <version>${knowm.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.ta4j</groupId>
             <artifactId>ta4j-core</artifactId>
             <version>0.10</version>
@@ -118,6 +124,12 @@
             <artifactId>kotlin-test</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.0</version>
         </dependency>
     </dependencies>
 
