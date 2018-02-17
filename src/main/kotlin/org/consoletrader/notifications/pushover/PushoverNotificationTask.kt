@@ -1,15 +1,13 @@
 package org.consoletrader.notifications.pushover
 
-import org.consoletrader.common.ExchangeManager
 import org.consoletrader.common.Task
-import org.consoletrader.notifications.NotificationExtendedParams
 
-class PushoverNotificationTask(val exchangeManager: ExchangeManager) : Task {
+class PushoverNotificationTask() : Task {
 
     val sender = PushoverNotificationSender()
 
     override fun execute(paramsRaw: String) {
-        val params = NotificationExtendedParams(paramsRaw)
+        val params = PushoverExtendedParams(paramsRaw)
         sender.sendMessage(params.apiKey, params.userId, params.message)
     }
 
