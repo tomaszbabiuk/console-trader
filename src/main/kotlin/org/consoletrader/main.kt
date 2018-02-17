@@ -55,6 +55,8 @@ fun main(args: Array<String>) {
     allTasks += MacdCrossDownTask(exchangeManager)
     allTasks += MacdCrossUpTask(exchangeManager)
     allTasks += CancelOrdersTask(exchangeManager)
+    allTasks += BollingerAboveTask(exchangeManager)
+    allTasks += BollingerBelowTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
@@ -116,6 +118,9 @@ fun printUsage() {
 
         -task:rsiabove([currency]|[threshold]) - exits 0 if RSI of specified currency is above threshold, otherwise exits 1
         -task:rsibelow([currency]|[threshold]) - exits 0 if RSI of specified currency is below threshold, otherwise exits 1
+
+        -task:bollingerabove([currency]) - exits 0 if close price is above upper Bollinger band, otherwise exits 1
+        -task:bollingerbelow([currency]) - exits 0 if close price is below lower Bollinger band, otherwise exits 1
 
         -task:macdcrossup([pair]) - exits 0 if MACD crosses up, otherwise exits 1
         -task:macdcrossdown([pair]) - exits 0 if MACD crosses down, otherwise exits 1

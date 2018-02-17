@@ -14,6 +14,10 @@ open class ListAssetsDataSource(exchangeManager: ExchangeManager) : DataSource<M
     private var etherPrice: Double? = null
 
     private fun calculateAssetPrice(symbol: String, amount: Double): Double {
+        if (symbol == "USD") {
+            return amount
+        }
+
         val usdCurrencyPair = CurrencyPair(symbol, "USD")
         val usdValue = tryGetTickerData(usdCurrencyPair, amount)
         if (usdValue != null) {
@@ -55,7 +59,8 @@ open class ListAssetsDataSource(exchangeManager: ExchangeManager) : DataSource<M
     override fun create(): Single<MutableList<PortfolioAsset>> {
         return Observable
                 .just(accountService.accountInfo)
-                .flatMapIterable { it.wallet.balances.values }
+                .flatMapIterable { it.wallets.values }
+                .flatMapIterable { it.balances.values }
                 .filter { it.total > BigDecimal.ZERO}
                 .map {
                     val usd = calculateAssetPrice(it.currency.toString(), it.total.toDouble())
