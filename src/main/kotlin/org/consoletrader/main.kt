@@ -62,6 +62,7 @@ fun main(args: Array<String>) {
     allTasks += BollingerBelowTask(exchangeManager)
     allTasks += MfiAboveTask(exchangeManager)
     allTasks += MfiBelowTask(exchangeManager)
+    allTasks += MfiPumpTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
