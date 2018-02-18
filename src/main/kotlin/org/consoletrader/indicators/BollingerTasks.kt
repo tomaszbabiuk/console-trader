@@ -30,7 +30,6 @@ class BollingerAboveTask(exchangeManager: ExchangeManager) : BollingerTask(excha
         val sd20Indicator = StandardDeviationIndicator(closePriceIndicator, 20)
         val middleBandIndicator = BollingerBandsMiddleIndicator(ema20Indicator)
         val upBandIndicator = BollingerBandsUpperIndicator(middleBandIndicator, sd20Indicator)
-
         val closePrice = closePriceIndicator.getValue(data.tickCount - 1).toDouble()
         val upBand = upBandIndicator.getValue(data.tickCount - 1).toDouble()
         val passed = closePrice > upBand
