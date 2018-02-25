@@ -9,7 +9,8 @@ open class VPatternOfMfiExtendedParams(taskRaw: String) : ExtendedParams() {
     val firstTopPeakAbove: Double
     val secondBottomPeakBelow: Double
     val thirdTopPeakAbove: Double
-    val timeFrame: Int
+    val mfiLength: Int
+    val timeFrames: Int
 
     init {
         try {
@@ -18,8 +19,13 @@ open class VPatternOfMfiExtendedParams(taskRaw: String) : ExtendedParams() {
             firstTopPeakAbove = taskParamsSplit[1].toDouble()
             secondBottomPeakBelow = taskParamsSplit[2].toDouble()
             thirdTopPeakAbove = taskParamsSplit[3].toDouble()
-            timeFrame = if (taskParamsSplit.count() == 5) {
+            mfiLength = if (taskParamsSplit.count() > 4) {
                             taskParamsSplit[4].toInt()
+                        } else {
+                            14
+                        }
+            timeFrames = if (taskParamsSplit.count() > 5) {
+                            taskParamsSplit[5].toInt()
                         } else {
                             14
                         }

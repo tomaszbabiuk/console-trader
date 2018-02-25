@@ -57,7 +57,7 @@ class MfiPumpTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSer
     }
 
     override fun verifySuccess(data: TimeSeries, params: VPatternOfMfiExtendedParams): Boolean {
-        val mfiIndicator = MoneyFlowIndicator(data, params.timeFrame)
+        val mfiIndicator = MoneyFlowIndicator(data, params.mfiLength)
 
         println("DEBUG - Money Flow Index values:")
         for (index in 15..data.tickCount -1) {
@@ -75,7 +75,7 @@ class MfiPumpTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSer
         if (secondTopPeakFound) {
             var minMfi = mfiThirdTopPeakNMinus1
             var minMfiIndex = data.tickCount - 2
-            for (index in 2..params.timeFrame) {
+            for (index in 2..params.timeFrames) {
                 val iMfi = mfiIndicator.getValue(data.tickCount -index).toDouble()
                 if (iMfi<minMfi) {
                     minMfi = iMfi
@@ -90,7 +90,7 @@ class MfiPumpTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSer
             val bottomPeakFound = mfiSecondBottomPeakN < mfiSecondBottomPeakNMinus1 && mfiSecondBottomPeakN < mfiSecondDownPeakNPlus1
             if (bottomPeakFound) {
                 var mfiFirstUpPeak = mfiSecondBottomPeakN
-                for (index in minMfiIndex - params.timeFrame..minMfiIndex) {
+                for (index in minMfiIndex downTo minMfiIndex - params.timeFrames) {
                     val iMfi = mfiIndicator.getValue(index).toDouble()
                     if (iMfi > mfiFirstUpPeak) {
                         mfiFirstUpPeak = iMfi
