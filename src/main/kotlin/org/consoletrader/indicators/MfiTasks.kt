@@ -102,7 +102,7 @@ class MfiPumpTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSer
                 val thirdPeakMatchesVPattern = mfiThirdTopPeakNMinus1 > params.thirdTopPeakAbove
 
                 println("[${firstPeakMatchesVPattern.toString().toUpperCase()}] First up peak above: $mfiFirstUpPeak > ${params.firstTopPeakAbove}")
-                println("[${secondPeakMatchesVPattern.toString().toUpperCase()}] Second bottom peak below: $mfiSecondBottomPeakN > ${params.secondBottomPeakBelow}")
+                println("[${secondPeakMatchesVPattern.toString().toUpperCase()}] Second bottom peak below: $mfiSecondBottomPeakN < ${params.secondBottomPeakBelow}")
                 println("[${thirdPeakMatchesVPattern.toString().toUpperCase()}] Third up peak above: $mfiThirdTopPeakNMinus1 > ${params.thirdTopPeakAbove}")
 
                 return firstPeakMatchesVPattern && secondPeakMatchesVPattern && thirdPeakMatchesVPattern
