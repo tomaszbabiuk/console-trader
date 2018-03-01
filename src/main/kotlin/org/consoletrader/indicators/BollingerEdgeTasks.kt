@@ -10,7 +10,7 @@ import org.ta4j.core.indicators.bollinger.BollingerBandsUpperIndicator
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator
 import org.ta4j.core.indicators.statistics.StandardDeviationIndicator
 
-abstract class BollingerTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSeries, PairExtendedParams>() {
+abstract class BollingerEdgeTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSeries, PairExtendedParams>() {
     override fun createDataSource(params: PairExtendedParams): Single<TimeSeries> {
         return IndicatorsDataSource(exchangeManager, params.currencyPair)
                 .create()
@@ -23,7 +23,7 @@ abstract class BollingerTask(val exchangeManager: ExchangeManager) : DataSourceT
     }
 }
 
-class BollingerAboveTask(exchangeManager: ExchangeManager) : BollingerTask(exchangeManager) {
+class BollingerEdgeAboveTask(exchangeManager: ExchangeManager) : BollingerEdgeTask(exchangeManager) {
     override fun verifySuccess(data: TimeSeries, params: PairExtendedParams): Boolean {
         val closePriceIndicator = ClosePriceIndicator(data)
         val ema20Indicator = EMAIndicator(closePriceIndicator, 20)
@@ -42,7 +42,7 @@ class BollingerAboveTask(exchangeManager: ExchangeManager) : BollingerTask(excha
     }
 }
 
-class BollingerBelowTask(exchangeManager: ExchangeManager) : BollingerTask(exchangeManager) {
+class BollingerEdgeBelowTask(exchangeManager: ExchangeManager) : BollingerEdgeTask(exchangeManager) {
     override fun verifySuccess(data: TimeSeries, params: PairExtendedParams): Boolean {
         val closePriceIndicator = ClosePriceIndicator(data)
         val ema20Indicator = EMAIndicator(closePriceIndicator, 20)

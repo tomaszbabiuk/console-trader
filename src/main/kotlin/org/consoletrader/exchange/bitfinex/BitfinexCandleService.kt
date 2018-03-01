@@ -18,7 +18,7 @@ class BitfinexCandleService : BaseApi<BitfinexPublicAPI>(
     override fun getCandles(pair: CurrencyPair): Single<MutableList<Tick>> {
         return getApi()
                 .queryCandles("${pair.base}${pair.counter}")
-                .flatMapIterable { it.reversed() }
+                .flatMapIterable { it.takeLast(56).reversed() }
                 .map {
                     val timestamp = it[0].toLong()
                     val open = it[1]
