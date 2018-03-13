@@ -44,7 +44,7 @@ class MfiBelowTask(exchangeManager: ExchangeManager) : MfiTask(exchangeManager) 
     }
 }
 
-class MfiPumpTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSeries, VPatternOfMfiExtendedParams>() {
+class MfiVPatternTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSeries, VPatternOfMfiExtendedParams>() {
 
     override fun createParams(paramsRaw: String): VPatternOfMfiExtendedParams {
         return VPatternOfMfiExtendedParams(paramsRaw)
@@ -60,7 +60,7 @@ class MfiPumpTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSer
         val mfiIndicator = MoneyFlowIndicator(data, params.mfiLength)
 
         println("DEBUG - Money Flow Index values:")
-        for (index in 15..data.tickCount -1) {
+        for (index in 15 until data.tickCount) {
             val tick = data.getTick(index)
             val mfi = mfiIndicator.getValue(index).toDouble()
             println("${tick.endTime}: $mfi")
@@ -118,6 +118,49 @@ class MfiPumpTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSer
 
     override fun match(paramsRaw: String): Boolean {
         return paramsRaw.startsWith("mfivpattern")
+    }
+}
+
+class MfiBottomTask(val exchangeManager: ExchangeManager) : DataSourceTask<TimeSeries, PairAndDoubleExtendedParams>() {
+
+    override fun createParams(paramsRaw: String): PairAndDoubleExtendedParams {
+        return PairAndDoubleExtendedParams(paramsRaw)
+    }
+
+    override fun createDataSource(params: PairAndDoubleExtendedParams): Single<TimeSeries> {
+        return IndicatorsDataSource(exchangeManager, params.currencyPair)
+                .create()
+                .map { it.series }
+    }
+
+    override fun verifySuccess(data: TimeSeries, params: PairAndDoubleExtendedParams): Boolean {
+        val mfiIndicator = MoneyFlowIndicator(data, 14)
+
+        println("DEBUG - Money Flow Index values:")
+        for (index in 15 until data.tickCount) {
+            val tick = data.getTick(index)
+            val mfi = mfiIndicator.getValue(index).toDouble()
+            println("${tick.endTime}: $mfi")
+        }
+        println()
+
+        val mfiPeakN = mfiIndicator.getValue(data.tickCount - 1).toDouble()
+        val mfiPeakNMinus1 = mfiIndicator.getValue(data.tickCount - 2).toDouble()
+        val mfiPeakNMinus2 = mfiIndicator.getValue(data.tickCount - 3).toDouble()
+        val peakFound = mfiPeakNMinus1 < mfiPeakNMinus2 && mfiPeakNMinus1 < mfiPeakN
+        if (peakFound) {
+            val passed = mfiPeakNMinus1 < params.value
+            println("[${passed.toString().toUpperCase()}] MFI bottom peak of ${params.currencyPair}: $mfiPeakNMinus1 < ${params.value}")
+            return passed
+        } else {
+            println("[FALSE] Bottom peak not found")
+        }
+
+        return false
+    }
+
+    override fun match(paramsRaw: String): Boolean {
+        return paramsRaw.startsWith("mfibottombelow")
     }
 }
 

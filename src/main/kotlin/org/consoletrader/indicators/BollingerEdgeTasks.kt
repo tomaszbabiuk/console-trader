@@ -30,10 +30,12 @@ class BollingerEdgeAboveTask(exchangeManager: ExchangeManager) : BollingerEdgeTa
         val sd20Indicator = StandardDeviationIndicator(closePriceIndicator, 20)
         val middleBandIndicator = BollingerBandsMiddleIndicator(ema20Indicator)
         val upBandIndicator = BollingerBandsUpperIndicator(middleBandIndicator, sd20Indicator)
-        val closePrice = closePriceIndicator.getValue(data.tickCount - 1).toDouble()
+        val latestTicker = exchangeManager.exchange.marketDataService.getTicker(params.currencyPair)
+        val latestAskPrice = latestTicker.ask.toDouble()
         val upBand = upBandIndicator.getValue(data.tickCount - 1).toDouble()
-        val passed = closePrice > upBand
-        println("[${passed.toString().toUpperCase()}] Close price of ${params.currencyPair}: $closePrice > $upBand (Bollinger upper band)")
+        val passed = latestAskPrice > upBand
+
+        println("[${passed.toString().toUpperCase()}] Latest ASK price of ${params.currencyPair}: $latestAskPrice > $upBand (Bollinger upper band)")
         return passed
     }
 
@@ -49,11 +51,12 @@ class BollingerEdgeBelowTask(exchangeManager: ExchangeManager) : BollingerEdgeTa
         val sd20Indicator = StandardDeviationIndicator(closePriceIndicator, 20)
         val middleBandIndicator = BollingerBandsMiddleIndicator(ema20Indicator)
         val lowBandIndicator = BollingerBandsLowerIndicator(middleBandIndicator, sd20Indicator)
-
-        val closePrice = closePriceIndicator.getValue(data.tickCount - 1).toDouble()
+        val latestTicker = exchangeManager.exchange.marketDataService.getTicker(params.currencyPair)
+        val latestAskPrice = latestTicker.ask.toDouble()
         val lowBand = lowBandIndicator.getValue(data.tickCount - 1).toDouble()
-        val passed = closePrice < lowBand
-        println("[${passed.toString().toUpperCase()}] Close price of ${params.currencyPair}: $closePrice < $lowBand (Bollinger lower band)")
+        val passed = latestAskPrice < lowBand
+
+        println("[${passed.toString().toUpperCase()}] Latest ASK price of ${params.currencyPair}: $latestAskPrice < $lowBand (Bollinger lower band)")
         return passed
     }
 
