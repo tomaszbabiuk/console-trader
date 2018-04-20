@@ -29,10 +29,9 @@ class TaxTask(val exchangeManager: ExchangeManager) : Task {
                 .subscribe {
                     if (it.type == Order.OrderType.BID) {
                         val toFifo = FiFoItem(it.originalAmount, it.price)
-//                        val toFifo = FiFoItem(0.8.toBigDecimal(), it.price)
                         fifo.add(toFifo)
 
-                        println("Adding to FIFO:\n$it\n")
+                        println("Adding ${it.originalAmount} ${params.currencyPair.base} to FIFO:\n$it\n")
                     }
 
                     if (it.type == Order.OrderType.ASK) {
@@ -61,7 +60,7 @@ class TaxTask(val exchangeManager: ExchangeManager) : Task {
 
                             totalCost += cost
                             totalIncome += income
-                            println("Removing $amountToSubtract from FIFO:\n$it")
+                            println("Removing $amountToSubtract ${params.currencyPair.base} from FIFO:\n$it")
                             println("Cost: $cost, income: $income\n")
                             amountLeft -= amountToSubtract
                         }
