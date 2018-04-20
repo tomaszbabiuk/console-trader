@@ -3,6 +3,7 @@ package org.consoletrader.exchange.kucoin
 import org.consoletrader.common.ExchangeManager
 import org.knowm.xchange.bitfinex.v1.service.BitfinexTradeService
 import org.knowm.xchange.currency.CurrencyPair
+import org.knowm.xchange.dto.account.Wallet
 import org.knowm.xchange.dto.trade.UserTrades
 import org.knowm.xchange.kucoin.KucoinExchange
 import java.math.BigDecimal
@@ -29,5 +30,9 @@ class KuCoinExchangeManager(apiKey: String, apiSecret: String) :
 
     override fun placeStopOrder(pair: CurrencyPair, price: BigDecimal, amount: BigDecimal) {
         throw NotSupportedException("Trailing stop orders are not supported for KUCOIN exchange")
+    }
+
+    override fun getExchangeWallet(): Wallet {
+        return exchange.accountService.accountInfo.wallet
     }
 }

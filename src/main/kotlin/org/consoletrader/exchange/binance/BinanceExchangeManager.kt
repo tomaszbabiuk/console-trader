@@ -4,6 +4,7 @@ import org.consoletrader.common.ExchangeManager
 import org.knowm.xchange.binance.BinanceExchange
 import org.knowm.xchange.binance.service.BinanceTradeHistoryParams
 import org.knowm.xchange.currency.CurrencyPair
+import org.knowm.xchange.dto.account.Wallet
 import org.knowm.xchange.dto.trade.UserTrades
 import java.math.BigDecimal
 import javax.ws.rs.NotSupportedException
@@ -27,5 +28,9 @@ class BinanceExchangeManager(apiKey: String, apiSecret: String) :
         tradeParams.currencyPair = pair
         tradeParams.limit = limit
         return exchange.tradeService.getTradeHistory(tradeParams)
+    }
+
+    override fun getExchangeWallet(): Wallet {
+        return exchange.accountService.accountInfo.wallet
     }
 }

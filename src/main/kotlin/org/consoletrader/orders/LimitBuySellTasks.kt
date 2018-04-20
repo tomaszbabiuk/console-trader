@@ -22,10 +22,7 @@ abstract class OrderTask(val exchangeManager: ExchangeManager) : Task {
             }
             OrderExtendedParams.AmountUnit.Percent -> {
                 val balance = exchangeManager
-                        .exchange
-                        .accountService
-                        .accountInfo
-                        .wallet
+                        .getExchangeWallet()
                         .balances
                         .getOrDefault(params.currencyPair.base, null)
 
