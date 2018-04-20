@@ -3,6 +3,7 @@ package org.consoletrader.exchange
 import org.consoletrader.common.ExchangeManager
 import org.consoletrader.exchange.binance.BinanceExchangeManager
 import org.consoletrader.exchange.bitfinex.BitfinexExchangeManager
+import org.consoletrader.exchange.bitmarket.BitmarketExchangeManager
 import org.consoletrader.exchange.kucoin.KuCoinExchangeManager
 
 
@@ -20,6 +21,10 @@ class ExchangeMatcher {
 
             "kucoin" -> {
                 return KuCoinExchangeManager(apiKey, apiSecret)
+            }
+
+            "bitmarket" -> {
+                return BitmarketExchangeManager(apiKey, apiSecret)
             }
 
             else -> {

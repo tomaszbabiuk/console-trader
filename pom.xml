@@ -10,7 +10,7 @@
 
     <properties>
         <kotlin.version>1.2.21</kotlin.version>
-        <knowm.version>4.3.4</knowm.version>
+        <knowm.version>4.3.5</knowm.version>
         <rxjava.version>2.1.6</rxjava.version>
         <retrofit.version>2.3.0</retrofit.version>
     </properties>

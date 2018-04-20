@@ -14,6 +14,7 @@ import org.consoletrader.orders.CancelOrdersTask
 import org.consoletrader.orders.TrailingStopTask
 import org.consoletrader.roi.RoiAboveTask
 import org.consoletrader.roi.RoiBelowTask
+import org.consoletrader.tax.TaxTask
 import org.consoletrader.wallet.*
 
 fun main(args: Array<String>) {
@@ -66,6 +67,7 @@ fun main(args: Array<String>) {
     allTasks += MfiBelowTask(exchangeManager)
     allTasks += MfiVPatternTask(exchangeManager)
     allTasks += MfiBottomTask(exchangeManager)
+    allTasks += TaxTask(exchangeManager)
 
     val taskToExecute = allTasks.firstOrNull { it.match(taskRaw) }
 
@@ -95,7 +97,7 @@ fun checkArgument(args: Array<String>, parameter: String, message: String? = nul
 fun printUsage() {
     println("""
         USAGE:
-        -exchange:[exchange] -key:[key] -secret:[secret] -task:[task] [-when:[condition1] -when:[condition2] -when:[condition...]]
+        -exchange:[exchange] -key:[key] -secret:[secret] -task:[task]
 
         Parameters:
         [exchange] - exchange name
