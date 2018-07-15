@@ -7,7 +7,7 @@ class GmailExtendedParams(taskRaw: String) : ExtendedParams() {
     val gmailuser: String
     val gmailpassword: String
     val to: String
-    val message: String
+    val messageOrFile: String
 
     init {
         try {
@@ -15,7 +15,7 @@ class GmailExtendedParams(taskRaw: String) : ExtendedParams() {
             gmailuser = paramsArray[0]
             gmailpassword = paramsArray[1]
             to = paramsArray[2]
-            message = paramsArray[3]
+            messageOrFile = paramsArray[3]
         } catch (ex: Exception) {
             throw ParsingParameterException("Error creating task params", ex)
         }
